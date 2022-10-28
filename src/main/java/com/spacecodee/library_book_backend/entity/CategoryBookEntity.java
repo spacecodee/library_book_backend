@@ -3,7 +3,6 @@ package com.spacecodee.library_book_backend.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -24,7 +23,7 @@ public class CategoryBookEntity {
     private String categoryBookName;
     @OneToMany(mappedBy = "categoryBookEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
-    private Set<BookEntity> booksEntity = new HashSet<>();
+    private Set<BookEntity> booksEntity;
 
     @Override public boolean equals(Object o) {
         if (this == o) return true;

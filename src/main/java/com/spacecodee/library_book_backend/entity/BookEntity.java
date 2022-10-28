@@ -36,9 +36,10 @@ public class BookEntity {
     @Basic
     @Column(name = "book_description", nullable = false, length = -1)
     private String bookDescription;
-    @ManyToOne(targetEntity = CategoryBookEntity.class)
+    @ManyToOne(targetEntity = CategoryBookEntity.class, fetch = FetchType.LAZY, optional = false)
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "category_book_id", referencedColumnName = "category_book_id", nullable = false)
+    @ToString.Exclude
     private CategoryBookEntity categoryBookEntity;
 
     @Override public boolean equals(Object o) {
