@@ -70,7 +70,7 @@ public class CategoryBookController implements IAllController<CategoryBookLDto, 
         HttpResponseApi httpResponseApiMsg = new HttpResponseApi();
 
         try {
-            this.categoryBookService.add(dto);
+            this.categoryBookService.add(lang, dto);
             httpResponseApiMsg.setMessage(this.messageUtilComponent.getMessage("add.success.category.book", lang));
             httpResponseApiMsg.setHttpStatus(HttpStatus.OK);
         } catch (NotAddSqlException exception) {
@@ -87,7 +87,7 @@ public class CategoryBookController implements IAllController<CategoryBookLDto, 
 
         dto.setId(id);
         try {
-            this.categoryBookService.update(dto);
+            this.categoryBookService.update(lang, dto);
             httpResponseApiMsg.setMessage(this.messageUtilComponent.getMessage("update.success.category.book", lang));
             httpResponseApiMsg.setHttpStatus(HttpStatus.OK);
         } catch (NotUpdateSqlException exception) {

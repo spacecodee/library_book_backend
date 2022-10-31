@@ -4,6 +4,7 @@ import com.spacecodee.library_book_backend.dto.book.BookADto;
 import com.spacecodee.library_book_backend.dto.book.BookLDto;
 import com.spacecodee.library_book_backend.dto.book.BookUDto;
 import com.spacecodee.library_book_backend.entity.BookEntity;
+import com.spacecodee.library_book_backend.mappers.category.book.ICategoryBookEntityMapper;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -46,8 +47,18 @@ public interface IBookEntityMapper {
     @InheritInverseConfiguration(name = "entityToUDto")
     BookEntity lDtoToEntity(BookLDto bookLDto);
 
+    @AfterMapping
+    default void linkCategoryBookEntity(@MappingTarget BookEntity entity, BookLDto dto) {
+        entity.setCategoryBookEntity(ICategoryBookEntityMapper.INSTANCE.uDtoToEntity(dto.getCategoryBookDto()));
+    }
+
     @InheritInverseConfiguration(name = "lDtoToEntity")
     BookLDto entityToLDto(BookEntity bookEntity);
+
+    @AfterMapping
+    default void linkCategoryBookDto(@MappingTarget BookLDto dto, BookEntity entity) {
+        dto.setCategoryBookDto(ICategoryBookEntityMapper.INSTANCE.entityToUDto(entity.getCategoryBookEntity()));
+    }
 
     @InheritInverseConfiguration(name = "entityToLDto")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

@@ -27,11 +27,8 @@ public class CategoryBookService implements IGenericService<CategoryBookLDto, Ca
     @Override
     public List<CategoryBookLDto> getAll() {
         final List<CategoryBookLDto> categories = new ArrayList<>();
-        this.iCategoryBookRepository.findAll().forEach(categoryBookEntity -> {
-            if (!categoryBookEntity.getBooksEntity().isEmpty()) {
-                categories.add(ICategoryBookEntityMapper.INSTANCE.entityToLDto(categoryBookEntity));
-            }
-        });
+        this.iCategoryBookRepository.findAll().forEach(categoryBookEntity -> categories.add(
+                ICategoryBookEntityMapper.INSTANCE.entityToLDto(categoryBookEntity)));
 
         return categories;
     }
@@ -68,6 +65,7 @@ public class CategoryBookService implements IGenericService<CategoryBookLDto, Ca
         this.iCategoryBookRepository.save(ICategoryBookEntityMapper.INSTANCE.aDtoToEntity(dto));
     }
 
+    @Transactional(rollbackFor = SQLException.class)
     @Override
     public void update(CategoryBookUDto dto) {
         this.iCategoryBookRepository.save(ICategoryBookEntityMapper.INSTANCE.uDtoToEntity(dto));

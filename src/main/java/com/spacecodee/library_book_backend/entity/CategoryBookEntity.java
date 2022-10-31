@@ -21,7 +21,7 @@ public class CategoryBookEntity {
     @Basic
     @Column(name = "category_book_name", nullable = false, length = 100)
     private String categoryBookName;
-    @OneToMany(mappedBy = "categoryBookEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "categoryBookEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<BookEntity> booksEntity;
 

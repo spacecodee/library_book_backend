@@ -4,6 +4,7 @@ import com.spacecodee.library_book_backend.component.ExceptionShortComponent;
 import com.spacecodee.library_book_backend.dto.category.book.CategoryBookADto;
 import com.spacecodee.library_book_backend.dto.category.book.CategoryBookLDto;
 import com.spacecodee.library_book_backend.dto.category.book.CategoryBookUDto;
+import com.spacecodee.library_book_backend.utils.Utils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,22 +58,26 @@ public class CategoryBookServiceImpl {
         }
     }
 
-    public void add(CategoryBookADto dto) {
+    public void add(String lang, CategoryBookADto dto) {
+        this.existByName(lang, dto.getName());
         this.categoryBookService.add(dto);
     }
 
-    public void update(CategoryBookUDto dto) {
+    public void update(String lang, CategoryBookUDto dto) {
+        this.noExistById(lang, dto.getId());
+
         List<CategoryBookLDto> categories = this.categoryBookService.getAll();
         categories.forEach(categoryBookLDto -> {
-            if (categoryBookLDto.getId() == dto.getId()
-                    || this.isNotEqualsName(categoryBookLDto.getName(), dto.getName())) {
+            if (categoryBookLDto.getName().equalsIgnoreCase(dto.getName())) {
+                if (categoryBookLDto.getId() != dto.getId()) {
+                    throw this.exceptionShortComponent.existFound("get.by.name.exists.category.book", lang);
+                }
+            }
+            else if (categoryBookLDto.getId() == dto.getId()
+                    || Utils.isNotEqualsName(categoryBookLDto.getName(), dto.getName())) {
                 this.categoryBookService.update(dto);
             }
         });
-    }
-
-    private boolean isNotEqualsName(String nameFromDto, String name) {
-        return !nameFromDto.equalsIgnoreCase(name);
     }
 
     public void delete(String lang, int id) {
