@@ -11,20 +11,20 @@ import java.util.Objects;
 @Setter
 @ToString
 @Entity
-@Table(name = "user", schema = "public", catalog = "spacecodee")
-public class UserEntity {
+@Table(name = "user_client", schema = "public", catalog = "spacecodee")
+public class UserClientEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_client_id", nullable = false)
     private int userId;
     @Basic
-    @Column(name = "user_email", nullable = false, length = 200)
+    @Column(name = "user_client_email", nullable = false, length = 200)
     private String userEmail;
     @Basic
-    @Column(name = "user_username", nullable = false, length = 100)
+    @Column(name = "user_client_username", nullable = false, length = 100)
     private String username;
     @Basic
-    @Column(name = "user_password", nullable = false, length = -1)
+    @Column(name = "user_client_password", nullable = false, length = -1)
     private String userPassword;
     @OneToOne(targetEntity = UserRoleEntity.class, cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_role_id", referencedColumnName = "user_role_id", nullable = false)
@@ -36,7 +36,7 @@ public class UserEntity {
     @Override public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserEntity that = (UserEntity) o;
+        UserClientEntity that = (UserClientEntity) o;
         return userId == that.userId && peopleEntity == that.peopleEntity
                 && Objects.equals(userEmail, that.userEmail)
                 && Objects.equals(username, that.username)

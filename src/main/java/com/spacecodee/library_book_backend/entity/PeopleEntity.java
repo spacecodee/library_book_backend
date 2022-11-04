@@ -29,8 +29,6 @@ public class PeopleEntity {
     @Basic
     @Column(name = "people_address", length = 100)
     private String peopleAddress;
-    @OneToOne(mappedBy = "peopleEntity", cascade = CascadeType.ALL)
-    private UserEntity userEntity;
 
     @Override public boolean equals(Object o) {
         if (this == o) return true;

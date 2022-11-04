@@ -1,7 +1,7 @@
 package com.spacecodee.library_book_backend.entity.rating;
 
 import com.spacecodee.library_book_backend.entity.BookEntity;
-import com.spacecodee.library_book_backend.entity.UserEntity;
+import com.spacecodee.library_book_backend.entity.UserClientEntity;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 
@@ -23,10 +23,10 @@ public class UserRatingBookEntity {
     @Column(name = "rating_book", nullable = false)
     private short ratingBook;
     @MapsId("ratingUserId")
-    @ManyToOne(targetEntity = UserEntity.class)
+    @ManyToOne(targetEntity = UserClientEntity.class)
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    @JoinColumn(name = "rating_user_id", referencedColumnName = "user_id", nullable = false)
-    private UserEntity userEntity;
+    @JoinColumn(name = "rating_user_id", referencedColumnName = "user_client_id", nullable = false)
+    private UserClientEntity userClientEntity;
     @MapsId("ratingUserId")
     @ManyToOne(targetEntity = BookEntity.class)
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
