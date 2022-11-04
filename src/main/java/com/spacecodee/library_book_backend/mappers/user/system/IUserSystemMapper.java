@@ -1,58 +1,65 @@
 package com.spacecodee.library_book_backend.mappers.user.system;
 
-import com.spacecodee.library_book_backend.dto.user.client.UserClientDto;
-import com.spacecodee.library_book_backend.entity.UserClientEntity;
+import com.spacecodee.library_book_backend.dto.user.system.UserSystemDto;
+import com.spacecodee.library_book_backend.entity.UserSystemEntity;
 import com.spacecodee.library_book_backend.mappers.people.IPeopleMapper;
 import com.spacecodee.library_book_backend.mappers.role.IUserRoleMapper;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+
+import java.util.HashSet;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IUserSystemMapper {
 
     IUserSystemMapper INSTANCE = Mappers.getMapper(IUserSystemMapper.class);
 
-    @Mapping(source = "id", target = "userId")
-    @Mapping(source = "email", target = "userEmail")
-    @Mapping(source = "password", target = "userPassword")
-    @Mapping(target = "userRolEntity", ignore = true)
+    @Mapping(source = "id", target = "userSystemId")
+    @Mapping(source = "email", target = "userSystemEmail")
+    @Mapping(source = "username", target = "userSystemUsername")
+    @Mapping(source = "password", target = "userSystemPassword")
+    @Mapping(target = "userRolesEntity", ignore = true)
     @Mapping(target = "peopleEntity", ignore = true)
-    UserClientEntity dtoToEntity(UserClientDto dto);
+    UserSystemEntity dtoToEntity(UserSystemDto dto);
 
     @AfterMapping
-    default void setPeopleEntity(@MappingTarget UserClientEntity entity, UserClientDto userClientDto) {
-        if (userClientDto.getPeopleDto() != null) {
-            entity.setPeopleEntity(IPeopleMapper.INSTANCE.dtoToEntity(userClientDto.getPeopleDto()));
+    default void setPeopleEntity(@MappingTarget UserSystemEntity entity, UserSystemDto dto) {
+        if (dto.getPeopleDto() != null) {
+            entity.setPeopleEntity(IPeopleMapper.INSTANCE.dtoToEntity(dto.getPeopleDto()));
         }
     }
 
     @AfterMapping
-    default void setRoleEntity(@MappingTarget UserClientEntity entity, UserClientDto userClientDto) {
-        if (userClientDto.getUserRolDto() != null) {
-            entity.setUserRolEntity(IUserRoleMapper.INSTANCE.dtoToEntity(userClientDto.getUserRolDto()));
+    default void setRolesEntity(@MappingTarget UserSystemEntity entity, UserSystemDto dto) {
+        if (dto.getUserRolesDto() != null) {
+            dto.getUserRolesDto().forEach(
+                    userRoleDto -> entity.getUserRolesEntity().add(IUserRoleMapper.INSTANCE.dtosToEntity(userRoleDto))
+            );
+
         }
     }
 
     @InheritInverseConfiguration(name = "dtoToEntity")
-    UserClientDto entityToDto(UserClientEntity entity);
+    UserSystemDto entityToDto(UserSystemEntity entity);
 
 
     @AfterMapping
-    default void setPeopleDto(@MappingTarget UserClientDto userClientDto, UserClientEntity entity) {
+    default void setPeopleDto(@MappingTarget UserSystemDto dto, UserSystemEntity entity) {
         if (entity.getPeopleEntity() != null) {
-            userClientDto.setPeopleDto(IPeopleMapper.INSTANCE.entityToDto(entity.getPeopleEntity()));
+            dto.setPeopleDto(IPeopleMapper.INSTANCE.entityToDto(entity.getPeopleEntity()));
         }
     }
 
     @AfterMapping
-    default void setRoleDto(@MappingTarget UserClientDto userClientDto, UserClientEntity entity) {
-        if (entity.getUserRolEntity() != null) {
-            userClientDto.setUserRolDto(IUserRoleMapper.INSTANCE.entityToDto(entity.getUserRolEntity()));
+    default void setRolesDto(@MappingTarget UserSystemDto dto, UserSystemEntity entity) {
+        if (entity.getUserRolesEntity() != null) {
+            entity.getUserRolesEntity().forEach(
+                    userRoleEntity -> dto.getUserRolesDto().add(IUserRoleMapper.INSTANCE.entityToDtos(userRoleEntity)));
         }
     }
 
 
     @InheritInverseConfiguration(name = "entityToDto")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    UserClientEntity updateEntityFromDto(UserClientDto dto, @MappingTarget UserClientEntity entity);
+    UserSystemEntity updateEntityFromDto(UserSystemDto dto, @MappingTarget UserSystemEntity entity);
 }

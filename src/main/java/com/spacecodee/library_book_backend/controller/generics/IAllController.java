@@ -1,4 +1,4 @@
-package com.spacecodee.library_book_backend.controller;
+package com.spacecodee.library_book_backend.controller.generics;
 
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApiMsg;

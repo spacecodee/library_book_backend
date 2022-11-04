@@ -3,60 +3,78 @@ package com.spacecodee.library_book_backend.mappers.role;
 import com.spacecodee.library_book_backend.dto.role.UserRoleDto;
 import com.spacecodee.library_book_backend.entity.UserRoleEntity;
 import com.spacecodee.library_book_backend.enums.RolNameEnum;
+import com.spacecodee.library_book_backend.utils.Utils;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IUserRoleMapper {
 
-    String[] ROLES_STRING = {"user", "admin", "student"};
-    RolNameEnum[] ROL_NAME_ENUMS = {RolNameEnum.ROLE_USER, RolNameEnum.ROLE_ADMIN, RolNameEnum.ROLE_STUDENT};
     IUserRoleMapper INSTANCE = Mappers.getMapper(IUserRoleMapper.class);
 
     @Mapping(source = "id", target = "userRoleId")
-    @Mapping(target = "userRoleName", ignore = true)
+    @Mapping(source = "name", target = "userRoleName", qualifiedByName = "setRoleName")
     UserRoleEntity dtoToEntity(UserRoleDto dto);
 
-    @AfterMapping
-    default void setRoleName(@MappingTarget UserRoleEntity entity, UserRoleDto dto) {
-        for (int i = 0; i < IUserRoleMapper.ROLES_STRING.length; i++) {
-            if (dto.getName().contains(IUserRoleMapper.ROLES_STRING[i])) {
-                entity.setUserRoleName(IUserRoleMapper.ROL_NAME_ENUMS[i]);
-                return;
-            }
-            else {
-                entity.setUserRoleName(IUserRoleMapper.ROL_NAME_ENUMS[2]);
+    @Mapping(source = "id", target = "userRoleId")
+    @Mapping(source = "name", target = "userRoleName", qualifiedByName = "setRolesName")
+    UserRoleEntity dtosToEntity(UserRoleDto dto);
+
+    @Named("setRoleName")
+    default RolNameEnum setRoleName(String name) {
+        return Utils.getROL_NAME_ENUMS()[2];
+    }
+
+    @Named("setRolesName")
+    default RolNameEnum setRolesName(String name) {
+        for (int i = 0; i < Utils.getROLES_STRING().length; i++) {
+            if (name.contains(Utils.getROLES_STRING()[i])) {
+                return Utils.getROL_NAME_ENUMS()[i];
             }
         }
+
+        return Utils.getROL_NAME_ENUMS()[1];
     }
 
     @InheritInverseConfiguration(name = "dtoToEntity")
+    @Mapping(source = "userRoleName", target = "name", qualifiedByName = "setRoleName")
     UserRoleDto entityToDto(UserRoleEntity entity);
 
-    @AfterMapping
-    default void setRoleName(@MappingTarget UserRoleDto dto, UserRoleEntity entity) {
-        for (int i = 0; i < IUserRoleMapper.ROL_NAME_ENUMS.length; i++) {
-            if (entity.getUserRoleName().equals(IUserRoleMapper.ROL_NAME_ENUMS[i])) {
-                dto.setName(IUserRoleMapper.ROLES_STRING[i]);
-                return;
-            }
-            else {
-                dto.setName(IUserRoleMapper.ROLES_STRING[2]);
+    @InheritInverseConfiguration(name = "dtoToEntity")
+    @Mapping(source = "userRoleName", target = "name", qualifiedByName = "setRolesName")
+    UserRoleDto entityToDtos(UserRoleEntity entity);
+
+    @Named("setRoleName")
+    default String setRoleName(RolNameEnum userRoleName) {
+        return Utils.getROLES_STRING()[2];
+    }
+
+    @Named("setRolesName")
+    default String setRolesName(RolNameEnum userRoleName) {
+        for (int i = 0; i < Utils.getROL_NAME_ENUMS().length; i++) {
+            if (userRoleName.equals(Utils.getROL_NAME_ENUMS()[i])) {
+                return Utils.getROLES_STRING()[i];
             }
         }
+
+        return Utils.getROLES_STRING()[1];
     }
 
     @InheritInverseConfiguration(name = "entityToDto")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     UserRoleEntity updateEntityFromDto(UserRoleDto dto, @MappingTarget UserRoleEntity entity);
 
+    @InheritInverseConfiguration(name = "updateEntityFromDto")
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    UserRoleDto updateDtoFromEntity(UserRoleEntity entity, @MappingTarget UserRoleDto dto);
+
     default RolNameEnum getRole(String name) {
-        for (int i = 0; i < IUserRoleMapper.ROLES_STRING.length; i++) {
-            if (name.contains(IUserRoleMapper.ROLES_STRING[i])) {
-                return IUserRoleMapper.ROL_NAME_ENUMS[i];
+        for (int i = 0; i < Utils.getROLES_STRING().length; i++) {
+            if (name.contains(Utils.getROLES_STRING()[i])) {
+                return Utils.getROL_NAME_ENUMS()[i];
             }
         }
 
-        return IUserRoleMapper.ROL_NAME_ENUMS[2];
+        return Utils.getROL_NAME_ENUMS()[2];
     }
 }

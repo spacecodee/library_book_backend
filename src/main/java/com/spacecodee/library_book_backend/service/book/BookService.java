@@ -3,7 +3,7 @@ package com.spacecodee.library_book_backend.service.book;
 import com.spacecodee.library_book_backend.dto.book.BookLDto;
 import com.spacecodee.library_book_backend.mappers.book.IBookEntityMapper;
 import com.spacecodee.library_book_backend.repository.IBookRepository;
-import com.spacecodee.library_book_backend.service.IGenericService;
+import com.spacecodee.library_book_backend.service.generics.IFirstService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BookService implements IGenericService<BookLDto, BookLDto, BookLDto> {
+public class BookService implements IFirstService<BookLDto> {
 
     private final IBookRepository iBookRepository;
 

@@ -5,7 +5,7 @@ import com.spacecodee.library_book_backend.dto.category.book.CategoryBookLDto;
 import com.spacecodee.library_book_backend.dto.category.book.CategoryBookUDto;
 import com.spacecodee.library_book_backend.mappers.category.book.ICategoryBookEntityMapper;
 import com.spacecodee.library_book_backend.repository.ICategoryBookRepository;
-import com.spacecodee.library_book_backend.service.IGenericService;
+import com.spacecodee.library_book_backend.service.generics.IGenericService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

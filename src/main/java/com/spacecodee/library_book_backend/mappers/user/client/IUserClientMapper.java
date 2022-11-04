@@ -13,6 +13,7 @@ public interface IUserClientMapper {
     IUserClientMapper INSTANCE = Mappers.getMapper(IUserClientMapper.class);
 
     @Mapping(source = "id", target = "userId")
+    @Mapping(source = "username", target = "username")
     @Mapping(source = "email", target = "userEmail")
     @Mapping(source = "password", target = "userPassword")
     @Mapping(target = "userRolEntity", ignore = true)

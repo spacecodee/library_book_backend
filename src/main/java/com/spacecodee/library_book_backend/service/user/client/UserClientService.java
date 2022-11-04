@@ -3,7 +3,7 @@ package com.spacecodee.library_book_backend.service.user.client;
 import com.spacecodee.library_book_backend.dto.user.client.UserClientDto;
 import com.spacecodee.library_book_backend.mappers.user.client.IUserClientMapper;
 import com.spacecodee.library_book_backend.repository.IUserClientRepository;
-import com.spacecodee.library_book_backend.service.IGenericService;
+import com.spacecodee.library_book_backend.service.generics.IFirstService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserClientService implements IGenericService<UserClientDto, UserClientDto, UserClientDto> {
+public class UserClientService implements IFirstService<UserClientDto> {
 
     private final IUserClientRepository iUserClientRepository;
 

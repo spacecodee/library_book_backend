@@ -1,4 +1,4 @@
-package com.spacecodee.library_book_backend.service;
+package com.spacecodee.library_book_backend.service.generics;
 
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotDeleteSqlException;

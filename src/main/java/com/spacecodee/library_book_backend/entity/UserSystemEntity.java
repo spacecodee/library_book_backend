@@ -1,6 +1,5 @@
 package com.spacecodee.library_book_backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,12 +30,11 @@ public class UserSystemEntity {
     private String userSystemPassword;
     @OneToOne(targetEntity = PeopleEntity.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "people_id", referencedColumnName = "people_id", nullable = false)
-    private PeopleEntity peopleByPeopleId;
+    private PeopleEntity peopleEntity;
     @ToString.Exclude
     @ManyToMany(targetEntity = UserRoleEntity.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "user_system_middle_role", joinColumns = @JoinColumn(name = "user_system_id"),
             inverseJoinColumns = @JoinColumn(name = "user_role_id"))
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<UserRoleEntity> userRolesEntity = new HashSet<>();
 
     @Override public boolean equals(Object o) {

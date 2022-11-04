@@ -2,7 +2,7 @@ package com.spacecodee.library_book_backend.controller.category.book;
 
 import com.spacecodee.library_book_backend.component.ExceptionShortComponent;
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
-import com.spacecodee.library_book_backend.controller.IAllController;
+import com.spacecodee.library_book_backend.controller.generics.IAllController;
 import com.spacecodee.library_book_backend.dto.category.book.CategoryBookADto;
 import com.spacecodee.library_book_backend.dto.category.book.CategoryBookLDto;
 import com.spacecodee.library_book_backend.dto.category.book.CategoryBookUDto;

@@ -18,6 +18,6 @@ public class RoleService {
         return this.userRoleRepository
                 .findByUserRoleName(IUserRoleMapper.INSTANCE.getRole(name))
                 .or(Optional::empty)
-                .map(IUserRoleMapper.INSTANCE::entityToDto);
+                .map(IUserRoleMapper.INSTANCE::entityToDtos);
     }
 }

@@ -1,7 +1,7 @@
 package com.spacecodee.library_book_backend.controller.user.client;
 
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
-import com.spacecodee.library_book_backend.controller.IAllController;
+import com.spacecodee.library_book_backend.controller.generics.IAllController;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.dto.user.client.UserClientDto;
