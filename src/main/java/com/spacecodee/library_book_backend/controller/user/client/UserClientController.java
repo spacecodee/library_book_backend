@@ -48,7 +48,7 @@ public class UserClientController implements IAllController<UserClientDto, UserC
     public ResponseEntity<HttpResponseApiMsg<UserClientDto>> getById(String lang, int id) {
         final HttpResponseApiMsg<UserClientDto> httpResponseApiMsg = new HttpResponseApiMsg<>();
         httpResponseApiMsg.setData(this.userClientService.getById(lang, id));
-        httpResponseApiMsg.setMessage(this.messageUtilComponent.getMessage("get.by.id.success.user.client", lang));
+        httpResponseApiMsg.setMessage(this.messageUtilComponent.getMessage("get.by.id.success.rating.book", lang));
         httpResponseApiMsg.setHttpStatus(HttpStatus.OK);
         return new ResponseEntity<>(httpResponseApiMsg, HttpStatus.OK);
     }
