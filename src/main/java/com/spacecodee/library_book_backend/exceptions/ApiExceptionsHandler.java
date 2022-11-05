@@ -67,6 +67,14 @@ public class ApiExceptionsHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(this.httpResponseApi, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(LoginAuthException.class)
+    public ResponseEntity<HttpResponseApi> loginAuthHandlerException(
+            LoginAuthException exception) {
+        this.httpResponseApi.setHttpStatus(HttpStatus.UNAUTHORIZED);
+        this.httpResponseApi.setMessage(exception.getMessage());
+        return new ResponseEntity<>(this.httpResponseApi, HttpStatus.UNAUTHORIZED);
+    }
+
     @Override
     @NonNull
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,

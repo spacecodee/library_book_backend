@@ -35,4 +35,8 @@ public class ExceptionShortComponent {
     public IsRequiredException isRequired(String message, String locale) {
         return new IsRequiredException(this.messageUtilComponent.getMessage(message, locale));
     }
+
+    public LoginAuthException loginAuth(String message, String locale) {
+        return new LoginAuthException(this.messageUtilComponent.getMessage(message, locale));
+    }
 }

@@ -1,13 +1,17 @@
 package com.spacecodee.library_book_backend.mappers.user.system;
 
+import com.spacecodee.library_book_backend.dto.user.system.PUserSystemDto;
 import com.spacecodee.library_book_backend.dto.user.system.UserSystemDto;
 import com.spacecodee.library_book_backend.entity.UserSystemEntity;
 import com.spacecodee.library_book_backend.mappers.people.IPeopleMapper;
 import com.spacecodee.library_book_backend.mappers.role.IUserRoleMapper;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IUserSystemMapper {
@@ -62,4 +66,40 @@ public interface IUserSystemMapper {
     @InheritInverseConfiguration(name = "entityToDto")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     UserSystemEntity updateEntityFromDto(UserSystemDto dto, @MappingTarget UserSystemEntity entity);
+
+    //principal user
+    @Mapping(target = "username", source = "userSystemUsername")
+    @Mapping(target = "password", source = "userSystemPassword")
+    @Mapping(target = "email", source = "userSystemEmail")
+    @Mapping(target = "fullName", ignore = true)
+    @Mapping(target = "authorities", ignore = true)
+    PUserSystemDto entityToPDto(UserSystemEntity entity);
+
+    @AfterMapping
+    default void setFullName(@MappingTarget PUserSystemDto dto, UserSystemEntity entity) {
+        if (entity.getPeopleEntity() != null) {
+            dto.setFullName(
+                    entity.getPeopleEntity().getPeopleName() + " " + entity.getPeopleEntity().getPeopleSurname());
+        }
+    }
+
+    @AfterMapping
+    default void setAuthorities(@MappingTarget PUserSystemDto dto, UserSystemEntity entity) {
+        if (!entity.getUserRolesEntity().isEmpty()) {
+            List<GrantedAuthority> authorities = entity.getUserRolesEntity()
+                                                       .stream()
+                                                       .map(rol -> new SimpleGrantedAuthority(
+                                                               rol.getUserRoleName().name()
+                                                       )).collect(Collectors.toList());
+            dto.setAuthorities(authorities);
+        }
+    }
+
+    default List<String> getUserSystemRoles(PUserSystemDto dto) {
+        if (!dto.getAuthorities().isEmpty()) {
+            return dto.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        }
+
+        return List.of();
+    }
 }
