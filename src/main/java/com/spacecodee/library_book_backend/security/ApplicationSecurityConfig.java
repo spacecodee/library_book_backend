@@ -43,6 +43,7 @@ public class ApplicationSecurityConfig {
                     .authorizeRequests()
                     .antMatchers(
                             "/api/v1/auth/**",
+                            "/v1/book/**",
                             "/v1/api-docs/**",
                             "/swagger-ui/**",
                             "/swagger-resources/**",
