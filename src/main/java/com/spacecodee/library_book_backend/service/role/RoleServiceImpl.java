@@ -4,6 +4,8 @@ import com.spacecodee.library_book_backend.component.ExceptionShortComponent;
 import com.spacecodee.library_book_backend.dto.role.UserRoleDto;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RoleServiceImpl {
 
@@ -13,6 +15,10 @@ public class RoleServiceImpl {
     public RoleServiceImpl(RoleService roleService, ExceptionShortComponent exceptionShortComponent) {
         this.roleService = roleService;
         this.exceptionShortComponent = exceptionShortComponent;
+    }
+
+    public List<UserRoleDto> getAll() {
+        return this.roleService.getAll();
     }
 
     public UserRoleDto findByName(String lang, String name) {

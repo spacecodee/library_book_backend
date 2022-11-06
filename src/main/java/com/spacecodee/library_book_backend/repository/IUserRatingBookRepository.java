@@ -10,5 +10,7 @@ import java.util.Optional;
 @Repository
 public interface IUserRatingBookRepository extends JpaRepository<UserRatingBookEntity, UserRatingBookKeyEntity> {
 
-    Optional<UserRatingBookEntity> getByUserRatingBookId(UserRatingBookKeyEntity userRatingBookId);
+    Optional<UserRatingBookEntity> getByUserRatingBookId(UserRatingBookKeyEntity id);
+
+    boolean existsByUserRatingBookId(UserRatingBookKeyEntity id);
 }

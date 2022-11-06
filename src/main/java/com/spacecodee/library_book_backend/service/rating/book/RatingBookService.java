@@ -25,6 +25,10 @@ public class RatingBookService {
                                              .map(IUserRatingBookMapper.INSTANCE::entityToDto);
     }
 
+    public boolean existRating(UserRatingBookKeyDto dto) {
+        return this.iUserRatingBookRepository.existsByUserRatingBookId(IUserRatingBookKeyMapper.INSTANCE.toEntity(dto));
+    }
+
     @Transactional(rollbackFor = NotAddSqlException.class)
     public void add(UserRatingBookDto dto) {
         this.iUserRatingBookRepository.save(IUserRatingBookMapper.INSTANCE.dtoToEntity(dto));

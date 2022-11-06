@@ -1,7 +1,7 @@
 package com.spacecodee.library_book_backend.controller.user.system;
 
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
-import com.spacecodee.library_book_backend.controller.generics.IGenericController;
+import com.spacecodee.library_book_backend.core.controller.IRDController;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.dto.user.system.UserSystemDto;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/user-system")
-public class UserSystemController implements IGenericController<UserSystemDto> {
+public class UserSystemController implements IRDController<UserSystemDto, Integer> {
 
     private final UserSystemServiceImpl userSystemService;
     private final MessageUtilComponent messageUtilComponent;
@@ -53,29 +53,7 @@ public class UserSystemController implements IGenericController<UserSystemDto> {
     }
 
     @Override
-    public ResponseEntity<HttpResponseApi> add(String lang, UserSystemDto dto) {
-        HttpResponseApi httpResponseApiMsg = new HttpResponseApi();
-
-        this.userSystemService.add(lang, dto);
-        httpResponseApiMsg.setMessage(this.messageUtilComponent.getMessage("add.success.user.system", lang));
-        httpResponseApiMsg.setHttpStatus(HttpStatus.OK);
-        return new ResponseEntity<>(httpResponseApiMsg, HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<HttpResponseApi> update(String lang, int id, UserSystemDto dto) {
-        HttpResponseApi httpResponseApiMsg = new HttpResponseApi();
-
-        dto.setId(id);
-        this.userSystemService.update(lang, dto);
-        httpResponseApiMsg.setMessage(this.messageUtilComponent.getMessage("update.success.user.system", lang));
-        httpResponseApiMsg.setHttpStatus(HttpStatus.OK);
-
-        return new ResponseEntity<>(httpResponseApiMsg, HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<HttpResponseApi> delete(String lang, int id) {
+    public ResponseEntity<HttpResponseApi> delete(String lang, Integer id) {
         HttpResponseApi httpResponseApiMsg = new HttpResponseApi();
 
         this.userSystemService.delete(lang, id);

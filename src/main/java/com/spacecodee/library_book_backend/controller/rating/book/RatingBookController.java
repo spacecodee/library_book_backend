@@ -2,6 +2,7 @@ package com.spacecodee.library_book_backend.controller.rating.book;
 
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsClient;
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
+import com.spacecodee.library_book_backend.core.controller.core.ICreateController;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.dto.rating.book.RatingBookDto;
@@ -10,13 +11,14 @@ import com.spacecodee.library_book_backend.dto.rating.book.UserRatingBookKeyDto;
 import com.spacecodee.library_book_backend.service.rating.book.RatingBookServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/rating-book")
-public class RatingBookController {
+public class RatingBookController implements ICreateController<RatingBookDto> {
 
     private final RatingBookServiceImpl ratingBookService;
     private final MessageUtilComponent messageUtilComponent;
@@ -26,6 +28,7 @@ public class RatingBookController {
         this.messageUtilComponent = messageUtilComponent;
     }
 
+    @IsAuthenticatedAsClient
     @GetMapping()
     public ResponseEntity<HttpResponseApiMsg<UserRatingBookDto>> getById(@RequestParam(defaultValue = "en") String lang,
                                                                          @RequestParam() int clientId,
@@ -38,9 +41,8 @@ public class RatingBookController {
     }
 
     @IsAuthenticatedAsClient
-    @PostMapping()
-    ResponseEntity<HttpResponseApi> add(@RequestParam(defaultValue = "en") String lang,
-                                        @Valid @RequestBody RatingBookDto dto) {
+    @Override
+    public ResponseEntity<HttpResponseApi> add(String lang, RatingBookDto dto) {
         HttpResponseApi httpResponseApiMsg = new HttpResponseApi();
 
         this.ratingBookService.add(lang, dto);

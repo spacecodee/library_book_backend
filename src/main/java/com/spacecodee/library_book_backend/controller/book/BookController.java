@@ -1,7 +1,7 @@
 package com.spacecodee.library_book_backend.controller.book;
 
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
-import com.spacecodee.library_book_backend.controller.generics.IAllController;
+import com.spacecodee.library_book_backend.core.controller.ICRUDController;
 import com.spacecodee.library_book_backend.dto.book.BookDto;
 import com.spacecodee.library_book_backend.dto.book.flat.BookFlatADto;
 import com.spacecodee.library_book_backend.dto.book.flat.BookFlatUDto;
@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/book")
-public class BookController implements IAllController<BookDto, BookFlatADto, BookFlatUDto> {
+public class BookController implements ICRUDController<BookFlatADto, BookDto, BookFlatUDto, Integer> {
 
     private final BookServiceImpl bookService;
     private final MessageUtilComponent messageUtilComponent;
@@ -27,6 +27,7 @@ public class BookController implements IAllController<BookDto, BookFlatADto, Boo
         this.bookService = bookService;
         this.messageUtilComponent = messageUtilComponent;
     }
+
 
     @Override
     public ResponseEntity<HttpResponseApiMsg<List<BookDto>>> list(String lang) {
@@ -78,7 +79,7 @@ public class BookController implements IAllController<BookDto, BookFlatADto, Boo
     }
 
     @Override
-    public ResponseEntity<HttpResponseApi> delete(String lang, int id) {
+    public ResponseEntity<HttpResponseApi> delete(String lang, Integer id) {
         HttpResponseApi httpResponseApiMsg = new HttpResponseApi();
 
         this.bookService.delete(lang, id);
