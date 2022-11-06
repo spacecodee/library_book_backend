@@ -19,12 +19,12 @@ import java.io.Serializable;
 public class UserClientADto implements Serializable {
 
     @Email(message = "{invalid.email}", regexp = Validations.REGEXP_EMAIL)
-    @NotEmpty(message = "{not.empty.email}")
+    @NotEmpty(message = "{not.empty.user.email}")
     private String email;
     @Size(min = 4, message = "{min.length.4}")
-    @NotEmpty(message = "{not.empty.username}")
+    @NotEmpty(message = "{not.empty.user.username}")
     private String username;
-    @NotEmpty(message = "{not.empty.password}")
+    @NotEmpty(message = "{not.empty.user.password}")
     private String password;
     @NotNull(message = "{not.null.people}")
     private PeopleDto peopleDto;

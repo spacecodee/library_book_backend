@@ -3,6 +3,7 @@ package com.spacecodee.library_book_backend.controller.rating.book;
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApiMsg;
+import com.spacecodee.library_book_backend.dto.rating.book.RatingBookDto;
 import com.spacecodee.library_book_backend.dto.rating.book.UserRatingBookDto;
 import com.spacecodee.library_book_backend.dto.rating.book.UserRatingBookKeyDto;
 import com.spacecodee.library_book_backend.service.rating.book.RatingBookServiceImpl;
@@ -37,7 +38,7 @@ public class RatingBookController {
 
     @PostMapping()
     ResponseEntity<HttpResponseApi> add(@RequestParam(defaultValue = "en") String lang,
-                                        @Valid @RequestBody UserRatingBookDto dto) {
+                                        @Valid @RequestBody RatingBookDto dto) {
         HttpResponseApi httpResponseApiMsg = new HttpResponseApi();
 
         this.ratingBookService.add(lang, dto);

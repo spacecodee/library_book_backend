@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -15,8 +14,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class UserRatingBookKeyDto implements Serializable {
 
-    @NotNull(message = "Client id is required")
     private int clientId;
-    @NotNull(message = "Book id is required")
     private int bookId;
 }

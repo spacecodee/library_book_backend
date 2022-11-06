@@ -17,12 +17,10 @@ public class PeopleDto implements Serializable {
 
     private int id;
 
-    @NotEmpty(message = "The name is required")
+    @NotEmpty(message = "{not.empty.people.name}")
     private String name;
-    @NotEmpty(message = "The surname is required")
+    @NotEmpty(message = "{not.empty.people.surname}")
     private String surname;
-    @NotEmpty(message = "The phone is required")
     private int phone;
-    @NotEmpty(message = "The address is required")
     private String address;
 }

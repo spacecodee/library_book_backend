@@ -15,8 +15,4 @@ import java.io.Serializable;
 public class UserRoleDto implements Serializable {
     private int id;
     private String name;
-
-    public UserRoleDto(String name) {
-        this.name = name;
-    }
 }

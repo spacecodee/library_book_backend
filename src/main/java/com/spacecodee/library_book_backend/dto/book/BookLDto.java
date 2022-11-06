@@ -17,6 +17,6 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 public class BookLDto extends BookUDto implements Serializable {
 
-    @NotNull(message = "Category book is required")
+    @NotNull(message = "{not.null.category.book}")
     private CategoryBookUDto categoryBookDto;
 }

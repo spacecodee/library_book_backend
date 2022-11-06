@@ -2,6 +2,7 @@ package com.spacecodee.library_book_backend.service.rating.book;
 
 import com.spacecodee.library_book_backend.component.ExceptionShortComponent;
 import com.spacecodee.library_book_backend.dto.book.BookUDto;
+import com.spacecodee.library_book_backend.dto.rating.book.RatingBookDto;
 import com.spacecodee.library_book_backend.dto.rating.book.UserRatingBookDto;
 import com.spacecodee.library_book_backend.dto.rating.book.UserRatingBookKeyDto;
 import com.spacecodee.library_book_backend.dto.user.client.UserClientDto;
@@ -38,15 +39,16 @@ public class RatingBookServiceImpl {
                 .orElseThrow(() -> this.exceptionShortComponent.notFound("get.by.id.error.rating.book", lang));
     }
 
-    public void add(String lang, UserRatingBookDto dto) {
-        BookUDto book = this.bookService.getById(lang, dto.getBookDto().getId());
-        UserClientDto userClient = this.userClientService.getById(lang, dto.getUserClientDto().getId());
+    public void add(String lang, RatingBookDto dto) {
+        BookUDto book = this.bookService.getById(lang, dto.getBookId());
+        UserClientDto userClient = this.userClientService.getById(lang, dto.getUserId());
 
-        dto.setBookDto(book);
-        dto.setUserClientDto(userClient);
+        UserRatingBookDto userRatingBookDto = new UserRatingBookDto();
+        userRatingBookDto.setBookDto(book);
+        userRatingBookDto.setUserClientDto(userClient);
 
         try {
-            this.ratingBookService.add(dto);
+            this.ratingBookService.add(userRatingBookDto);
         } catch (NotAddSqlException e) {
             RatingBookServiceImpl.LOGGER.error("error adding: {}", e.getMessage());
             throw this.exceptionShortComponent.notAddSql("add.error.rating.book", lang);

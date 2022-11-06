@@ -15,6 +15,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @ToString
 public class UserRatingBookDto implements Serializable {
+
     private short ratingBook;
     private UserClientDto userClientDto;
     private BookUDto bookDto;

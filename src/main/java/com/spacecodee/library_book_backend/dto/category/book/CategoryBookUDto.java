@@ -2,7 +2,6 @@ package com.spacecodee.library_book_backend.dto.category.book;
 
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -15,6 +14,5 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class CategoryBookUDto extends CategoryBookADto implements Serializable {
-    @NotNull(message = "Category id is required")
     private int id;
 }
