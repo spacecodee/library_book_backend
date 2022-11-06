@@ -5,7 +5,7 @@ import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.dto.jwt.JwtDto;
 import com.spacecodee.library_book_backend.dto.user.UserDto;
-import com.spacecodee.library_book_backend.dto.user.client.UserClientDto;
+import com.spacecodee.library_book_backend.dto.user.client.UserClientADto;
 import com.spacecodee.library_book_backend.service.auth.AuthServiceImpl;
 import com.spacecodee.library_book_backend.service.user.client.UserClientServiceImpl;
 import com.spacecodee.library_book_backend.service.user.system.UserSystemServiceImpl;
@@ -35,7 +35,7 @@ public class AuthController {
 
     @PostMapping("/register-client")
     public ResponseEntity<HttpResponseApi> registerClient(@RequestParam(defaultValue = "en") String lang,
-                                                          @Valid @RequestBody UserClientDto dto) {
+                                                          @Valid() @RequestBody UserClientADto dto) {
         HttpResponseApi responseApi = new HttpResponseApi();
 
         this.userClientService.add(lang, dto);

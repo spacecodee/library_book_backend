@@ -44,6 +44,9 @@ public class ApplicationSecurityConfig {
                     .antMatchers(
                             "/api/v1/auth/**",
                             "/v1/book/**",
+                            "/v1/category-book/**",
+                            "/v1/user-system/**",
+                            "/v1/user-client/**",
                             "/v1/api-docs/**",
                             "/swagger-ui/**",
                             "/swagger-resources/**",

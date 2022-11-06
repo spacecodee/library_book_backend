@@ -1,10 +1,11 @@
 package com.spacecodee.library_book_backend.service.user.client;
 
 import com.spacecodee.library_book_backend.component.ExceptionShortComponent;
-import com.spacecodee.library_book_backend.dto.role.UserRoleDto;
+import com.spacecodee.library_book_backend.dto.user.client.UserClientADto;
 import com.spacecodee.library_book_backend.dto.user.client.UserClientDto;
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
+import com.spacecodee.library_book_backend.mappers.user.client.IUserClientMapper;
 import com.spacecodee.library_book_backend.service.role.RoleServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,14 +80,15 @@ public class UserClientServiceImpl {
         }
     }
 
-    public void add(String lang, UserClientDto dto) {
-        this.setRoleToDto(lang, dto);
+    public void add(String lang, UserClientADto dto) {
+        UserClientDto clientDto = IUserClientMapper.INSTANCE.aDtoToDto(dto);
+        clientDto.setUserRolDto(this.roleService.findByName(lang, "student"));
         this.existByEmail(lang, dto.getEmail());
         this.existByUsername(lang, dto.getUsername());
         this.existByPhone(lang, dto.getPeopleDto().getPhone());
         try {
-            dto.setPassword(this.passwordEncoder.encode(dto.getPassword()));
-            this.userClientService.add(dto);
+            clientDto.setPassword(this.passwordEncoder.encode(clientDto.getPassword()));
+            this.userClientService.add(clientDto);
         } catch (NotAddSqlException e) {
             UserClientServiceImpl.LOGGER.error("error adding: {}", e.getMessage());
             throw this.exceptionShortComponent.notAddSql("add.error.user.client", lang);
@@ -94,7 +96,7 @@ public class UserClientServiceImpl {
     }
 
     public void update(String lang, UserClientDto dto) {
-        this.setRoleToDto(lang, dto);
+        dto.setUserRolDto(this.roleService.findByName(lang, "student"));
         this.noExistById(lang, dto.getId());
 
         List<UserClientDto> users = this.userClientService.getAll();
@@ -124,11 +126,6 @@ public class UserClientServiceImpl {
             UserClientServiceImpl.LOGGER.error("error updating: {}", e.getMessage());
             throw this.exceptionShortComponent.noUpdateSql("update.error.user.client", lang);
         }
-    }
-
-    private void setRoleToDto(String lang, UserClientDto dto) {
-        UserRoleDto role = this.roleService.findByName(lang, dto.getUserRolDto().getName());
-        dto.setUserRolDto(role);
     }
 
     public void delete(String lang, int id) {

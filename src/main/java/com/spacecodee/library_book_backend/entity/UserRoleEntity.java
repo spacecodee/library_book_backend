@@ -23,6 +23,10 @@ public class UserRoleEntity {
     @Column(name = "user_role_name", nullable = false, length = 100)
     private RolNameEnum userRoleName;
 
+    public UserRoleEntity(RolNameEnum userRoleName) {
+        this.userRoleName = userRoleName;
+    }
+
     @Override public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

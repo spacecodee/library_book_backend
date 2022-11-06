@@ -1,7 +1,9 @@
 package com.spacecodee.library_book_backend.mappers.user.client;
 
 import com.spacecodee.library_book_backend.dto.user.client.PUserClientDto;
+import com.spacecodee.library_book_backend.dto.user.client.UserClientADto;
 import com.spacecodee.library_book_backend.dto.user.client.UserClientDto;
+import com.spacecodee.library_book_backend.dto.user.client.UserClientUDto;
 import com.spacecodee.library_book_backend.entity.UserClientEntity;
 import com.spacecodee.library_book_backend.mappers.people.IPeopleMapper;
 import com.spacecodee.library_book_backend.mappers.role.IUserRoleMapper;
@@ -63,6 +65,24 @@ public interface IUserClientMapper {
     @InheritInverseConfiguration(name = "entityToDto")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     UserClientEntity updateEntityFromDto(UserClientDto dto, @MappingTarget UserClientEntity entity);
+
+    //client a
+    @Mapping(source = "email", target = "email")
+    @Mapping(source = "username", target = "username")
+    @Mapping(source = "password", target = "password")
+    @Mapping(source = "peopleDto", target = "peopleDto")
+    @Mapping(target = "userRolDto", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    UserClientDto aDtoToDto(UserClientADto dto);
+
+    //client u
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "email", target = "email")
+    @Mapping(source = "username", target = "username")
+    @Mapping(source = "password", target = "password")
+    @Mapping(source = "peopleDto", target = "peopleDto")
+    @Mapping(target = "userRolDto", ignore = true)
+    UserClientDto uDtoToDto(UserClientUDto dto);
 
     //principal user
     @Mapping(target = "username", source = "username")
