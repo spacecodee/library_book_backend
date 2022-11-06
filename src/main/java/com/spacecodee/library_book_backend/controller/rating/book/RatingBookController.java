@@ -1,5 +1,6 @@
 package com.spacecodee.library_book_backend.controller.rating.book;
 
+import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsClient;
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApiMsg;
@@ -36,6 +37,7 @@ public class RatingBookController {
         return new ResponseEntity<>(httpResponseApiMsg, HttpStatus.OK);
     }
 
+    @IsAuthenticatedAsClient
     @PostMapping()
     ResponseEntity<HttpResponseApi> add(@RequestParam(defaultValue = "en") String lang,
                                         @Valid @RequestBody RatingBookDto dto) {

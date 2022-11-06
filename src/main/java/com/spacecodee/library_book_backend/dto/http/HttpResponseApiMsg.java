@@ -3,6 +3,7 @@ package com.spacecodee.library_book_backend.dto.http;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @AllArgsConstructor
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-public class HttpResponseApiMsg<D> {
+public class HttpResponseApiMsg<D> implements Serializable {
 
     private String message;
     @Setter(AccessLevel.PRIVATE)

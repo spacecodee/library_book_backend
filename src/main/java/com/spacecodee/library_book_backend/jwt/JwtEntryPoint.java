@@ -16,10 +16,11 @@ public class JwtEntryPoint implements AuthenticationEntryPoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtEntryPoint.class);
 
-    @Override public void commence(HttpServletRequest request, HttpServletResponse response,
-                                   AuthenticationException authException) throws IOException, ServletException {
+    @Override
+    public void commence(HttpServletRequest request, HttpServletResponse response,
+                         AuthenticationException authException) throws IOException, ServletException {
+        authException.printStackTrace(System.err);
         JwtEntryPoint.LOGGER.error("Unauthorized error: {}", authException.getMessage());
-        JwtEntryPoint.LOGGER.error("fail in commence method");
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "no authorized");
     }
 }

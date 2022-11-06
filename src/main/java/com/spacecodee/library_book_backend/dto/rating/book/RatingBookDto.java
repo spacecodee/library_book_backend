@@ -1,25 +1,22 @@
 package com.spacecodee.library_book_backend.dto.rating.book;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
  * A DTO for the {@link com.spacecodee.library_book_backend.entity.rating.UserRatingBookEntity} entity
  */
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RatingBookDto implements Serializable {
-    @Size(min = 1, max = 5, message = "{size.rating.book}")
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class RatingBookDto extends UserRatingBookKeyDto implements Serializable {
+    @Min(value = 1, message = "{size.rating.book}")
     @Positive(message = "{positive.rating.book}")
     private short ratingBook;
-    @Positive(message = "{positive.user.id}")
-    private int userId;
-    @Positive(message = "{positive.book.id}")
-    private int bookId;
 }

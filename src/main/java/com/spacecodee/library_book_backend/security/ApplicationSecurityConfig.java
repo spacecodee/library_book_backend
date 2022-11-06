@@ -17,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -39,7 +40,10 @@ public class ApplicationSecurityConfig {
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.cors().and().csrf().disable()
+        httpSecurity.cors()
+                    .and()
+                    .csrf()
+                    .disable()
                     .authorizeRequests()
                     .antMatchers(
                             "/v1/auth/**",
@@ -53,10 +57,16 @@ public class ApplicationSecurityConfig {
                             "/configuration/**",
                             "/webjars/**"
                     ).permitAll()
-                    .anyRequest().authenticated().and().exceptionHandling()
+                    .anyRequest()
+                    .authenticated()
+                    .and()
+                    .exceptionHandling()
                     .authenticationEntryPoint(this.jwtEntryPoint)
-                    .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                    .and()
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        httpSecurity.addFilterBefore(this.jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 
@@ -76,12 +86,8 @@ public class ApplicationSecurityConfig {
     }
 
     @Autowired
-    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder
-                .userDetailsService(this.userSystemService)
-                .passwordEncoder(new BCryptPasswordEncoder());
-        authenticationManagerBuilder
-                .userDetailsService(userClientService)
-                .passwordEncoder(new BCryptPasswordEncoder());
+    public void configure(AuthenticationManagerBuilder builder) throws Exception {
+        builder.userDetailsService(this.userSystemService).passwordEncoder(new BCryptPasswordEncoder());
+        builder.userDetailsService(this.userClientService).passwordEncoder(new BCryptPasswordEncoder());
     }
 }

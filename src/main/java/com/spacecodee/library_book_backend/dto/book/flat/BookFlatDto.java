@@ -16,15 +16,14 @@ public abstract class BookFlatDto implements Serializable {
 
     @NotEmpty(message = "{not.empty.book.name}")
     private String name;
-    @NotEmpty(message = "{not.empty.book.pages}")
     @Positive(message = "{positive.book.pages}")
     private int pages;
     @NotEmpty(message = "{not.empty.book.author}")
     private String author;
     @NotEmpty(message = "{not.empty.book.url.image}")
-    private String urlImage;
+    private String image;
     @NotEmpty(message = "{not.empty.book.url.pdf}")
-    private String urlPdf;
+    private String pdf;
     @NotEmpty(message = "{not.empty.book.description}")
     private String description;
 }

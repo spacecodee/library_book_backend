@@ -49,19 +49,28 @@ public class JwtProvider {
             roles = IUserSystemMapper.INSTANCE.getUserSystemRoles(principalSystem);
         }
 
-        return getTokenForAll(username, roles);
+        return Jwts.builder()
+                   .setSubject(username)
+                   .claim(JwtProvider.ROLES_CLAIM, roles)
+                   .setIssuedAt(new Date())
+                   .setExpiration(new Date(new Date().getTime() + this.expiration * 180L))
+                   .signWith(SignatureAlgorithm.HS512, this.secretKey.getBytes())
+                   .compact();
     }
 
     public String getUsernameFromToken(String token) {
-        return Jwts.parser().setSigningKey(this.secretKey.getBytes())
+        return Jwts.parser()
+                   .setSigningKey(this.secretKey.getBytes())
                    .parseClaimsJws(token)
                    .getBody()
-                   .getSubject();
+                   .getSubject(); // no
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(this.secretKey.getBytes()).parseClaimsJws(token);
+            Jwts.parser()
+                .setSigningKey(this.secretKey.getBytes())
+                .parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException ex) {
             JwtProvider.LOGGER.error(JwtProvider.ERROR, ex.getMessage());
@@ -91,16 +100,24 @@ public class JwtProvider {
 
         @SuppressWarnings("unchecked")
         List<String> roles = (List<String>) claimsSet.getClaim(JwtProvider.ROLES_CLAIM);
-        return this.getTokenForAll(username, roles);
+        return Jwts
+                .builder()
+                .setSubject(username)
+                .claim(JwtProvider.ROLES_CLAIM, roles)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + expiration * 180L))
+                .signWith(SignatureAlgorithm.HS512, this.secretKey.getBytes())
+                .compact();
     }
 
     private String getTokenForAll(String username, List<String> roles) {
-        return Jwts.builder()
-                   .setSubject(username)
-                   .claim(JwtProvider.ROLES_CLAIM, roles)
-                   .setIssuedAt(new Date())
-                   .setExpiration(new Date(new Date().getTime() + this.expiration * 100L))
-                   .signWith(SignatureAlgorithm.HS512, this.secretKey.getBytes())
-                   .compact();
+        return Jwts
+                .builder()
+                .setSubject(username)
+                .claim(JwtProvider.ROLES_CLAIM, roles)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + expiration * 180L))
+                .signWith(SignatureAlgorithm.HS512, this.secretKey.getBytes())
+                .compact();
     }
 }

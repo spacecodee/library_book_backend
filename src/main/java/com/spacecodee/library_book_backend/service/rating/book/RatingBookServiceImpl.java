@@ -41,7 +41,7 @@ public class RatingBookServiceImpl {
 
     public void add(String lang, RatingBookDto dto) {
         BookUDto book = this.bookService.getById(lang, dto.getBookId());
-        UserClientDto userClient = this.userClientService.getById(lang, dto.getUserId());
+        UserClientDto userClient = this.userClientService.getById(lang, dto.getClientId());
 
         UserRatingBookDto userRatingBookDto = new UserRatingBookDto();
         userRatingBookDto.setBookDto(book);

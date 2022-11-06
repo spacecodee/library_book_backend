@@ -50,6 +50,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         } catch (Exception e) {
+            e.printStackTrace(System.out);
             JwtTokenFilter.LOGGER.error("fail en el método doFilter: {}", e.getMessage());
         }
 
@@ -62,6 +63,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         userDetails = this.userDetailsService.loadUserByUsername(username);
         if (userDetails == null) {
             userDetails = this.userClientService.loadUserByUsername(username);
+            System.out.println("userDetails = " + userDetails);
         }
 
         return userDetails;
@@ -70,7 +72,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private String getToken(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer")) {return header.replace("Bearer ", "");}
-
         return null;
     }
 }

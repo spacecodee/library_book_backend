@@ -86,20 +86,19 @@ public interface IUserSystemMapper {
     @AfterMapping
     default void setAuthorities(@MappingTarget PUserSystemDto dto, UserSystemEntity entity) {
         if (!entity.getUserRolesEntity().isEmpty()) {
-            List<GrantedAuthority> authorities = entity.getUserRolesEntity()
-                                                       .stream()
-                                                       .map(rol -> new SimpleGrantedAuthority(
-                                                               rol.getUserRoleName().name()
-                                                       )).collect(Collectors.toList());
+            List<SimpleGrantedAuthority> authorities = entity.getUserRolesEntity()
+                                                             .stream()
+                                                             .map(rol -> new SimpleGrantedAuthority(
+                                                                     rol.getUserRoleName().name()
+                                                             )).collect(Collectors.toList());
             dto.setAuthorities(authorities);
         }
     }
 
     default List<String> getUserSystemRoles(PUserSystemDto dto) {
-        if (!dto.getAuthorities().isEmpty()) {
-            return dto.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-        }
-
-        return List.of();
+        return dto.getAuthorities()
+                  .stream()
+                  .map(GrantedAuthority::getAuthority)
+                  .collect(Collectors.toList());
     }
 }

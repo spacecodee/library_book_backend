@@ -110,10 +110,9 @@ public interface IUserClientMapper {
     }
 
     default List<String> getUserClientRoles(PUserClientDto dto) {
-        if (!dto.getAuthorities().isEmpty()) {
-            return dto.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-        }
-
-        return List.of();
+        return dto.getAuthorities()
+                  .stream()
+                  .map(GrantedAuthority::getAuthority)
+                  .collect(Collectors.toList());
     }
 }

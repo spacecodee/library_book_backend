@@ -3,13 +3,15 @@ package com.spacecodee.library_book_backend.dto.http;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class HttpResponseApi {
+public class HttpResponseApi implements Serializable {
 
     private String message;
     @Setter(AccessLevel.PRIVATE)
