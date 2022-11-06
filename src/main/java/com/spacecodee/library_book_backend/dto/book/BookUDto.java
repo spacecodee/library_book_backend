@@ -2,7 +2,6 @@ package com.spacecodee.library_book_backend.dto.book;
 
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -16,6 +15,5 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 public class BookUDto extends BookADto implements Serializable {
 
-    @NotNull(message = "Book id is required")
     private int id;
 }

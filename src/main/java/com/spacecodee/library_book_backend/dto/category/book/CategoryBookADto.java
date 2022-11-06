@@ -3,7 +3,6 @@ package com.spacecodee.library_book_backend.dto.category.book;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -15,7 +14,6 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @ToString
 public class CategoryBookADto implements Serializable {
-    @NotNull(message = "Category name is required")
-    @NotEmpty(message = "Category name is required")
+    @NotEmpty(message = "{not.empty.category.book}")
     private String name;
 }

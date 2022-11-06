@@ -3,7 +3,7 @@ package com.spacecodee.library_book_backend.dto.book;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.io.Serializable;
 
 /**
@@ -17,16 +17,17 @@ import java.io.Serializable;
 @ToString
 public class BookADto implements Serializable {
 
-    @NotEmpty(message = "Book name is required")
+    @NotEmpty(message = "{not.empty.book.name}")
     private String name;
-    @NotNull(message = "Book pages is required")
+    @NotEmpty(message = "{not.empty.book.pages}")
+    @Positive(message = "{positive.book.pages}")
     private int pages;
-    @NotEmpty(message = "Book author is required")
+    @NotEmpty(message = "{not.empty.book.author}")
     private String author;
-    @NotEmpty(message = "Book url image is required")
+    @NotEmpty(message = "{not.empty.book.url.image}")
     private String urlImage;
-    @NotEmpty(message = "Book url pdf is required")
+    @NotEmpty(message = "{not.empty.book.url.pdf}")
     private String urlPdf;
-    @NotEmpty(message = "Book description is required")
+    @NotEmpty(message = "{not.empty.book.description}")
     private String description;
 }
