@@ -1,6 +1,5 @@
 package com.spacecodee.library_book_backend.controller.book;
 
-import com.spacecodee.library_book_backend.component.ExceptionShortComponent;
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
 import com.spacecodee.library_book_backend.controller.generics.IAllController;
 import com.spacecodee.library_book_backend.dto.book.BookDto;
@@ -9,8 +8,6 @@ import com.spacecodee.library_book_backend.dto.book.flat.BookFlatUDto;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.service.book.BookServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,15 +20,11 @@ import java.util.List;
 public class BookController implements IAllController<BookDto, BookFlatADto, BookFlatUDto> {
 
     private final BookServiceImpl bookService;
-    private final ExceptionShortComponent exceptionShortComponent;
     private final MessageUtilComponent messageUtilComponent;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
-
-    public BookController(BookServiceImpl bookService, ExceptionShortComponent exceptionShortComponent,
+    public BookController(BookServiceImpl bookService,
                           MessageUtilComponent messageUtilComponent) {
         this.bookService = bookService;
-        this.exceptionShortComponent = exceptionShortComponent;
         this.messageUtilComponent = messageUtilComponent;
     }
 

@@ -49,13 +49,7 @@ public class JwtProvider {
             roles = IUserSystemMapper.INSTANCE.getUserSystemRoles(principalSystem);
         }
 
-        return Jwts.builder()
-                   .setSubject(username)
-                   .claim(JwtProvider.ROLES_CLAIM, roles)
-                   .setIssuedAt(new Date())
-                   .setExpiration(new Date(new Date().getTime() + this.expiration * 180L))
-                   .signWith(SignatureAlgorithm.HS512, this.secretKey.getBytes())
-                   .compact();
+        return this.getTokenForAll(username, roles);
     }
 
     public String getUsernameFromToken(String token) {
@@ -100,24 +94,16 @@ public class JwtProvider {
 
         @SuppressWarnings("unchecked")
         List<String> roles = (List<String>) claimsSet.getClaim(JwtProvider.ROLES_CLAIM);
-        return Jwts
-                .builder()
-                .setSubject(username)
-                .claim(JwtProvider.ROLES_CLAIM, roles)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + expiration * 180L))
-                .signWith(SignatureAlgorithm.HS512, this.secretKey.getBytes())
-                .compact();
+        return this.getTokenForAll(username, roles);
     }
 
     private String getTokenForAll(String username, List<String> roles) {
-        return Jwts
-                .builder()
-                .setSubject(username)
-                .claim(JwtProvider.ROLES_CLAIM, roles)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + expiration * 180L))
-                .signWith(SignatureAlgorithm.HS512, this.secretKey.getBytes())
-                .compact();
+        return Jwts.builder()
+                   .setSubject(username)
+                   .claim(JwtProvider.ROLES_CLAIM, roles)
+                   .setIssuedAt(new Date())
+                   .setExpiration(new Date(new Date().getTime() + this.expiration * 180L))
+                   .signWith(SignatureAlgorithm.HS512, this.secretKey.getBytes())
+                   .compact();
     }
 }

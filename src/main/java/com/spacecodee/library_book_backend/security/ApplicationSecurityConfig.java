@@ -7,6 +7,7 @@ import com.spacecodee.library_book_backend.service.user.system.PUserSystemServic
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -47,8 +48,6 @@ public class ApplicationSecurityConfig {
                     .authorizeRequests()
                     .antMatchers(
                             "/v1/auth/**",
-                            "/v1/book/**",
-                            "/v1/category-book/**",
                             "/v1/user-system/**",
                             "/v1/user-client/**",
                             "/v1/api-docs/**",
@@ -56,6 +55,11 @@ public class ApplicationSecurityConfig {
                             "/swagger-resources/**",
                             "/configuration/**",
                             "/webjars/**"
+                    ).permitAll()
+                    .antMatchers(
+                            HttpMethod.GET,
+                            "/v1/book/**",
+                            "/v1/category-book/**"
                     ).permitAll()
                     .anyRequest()
                     .authenticated()
