@@ -1,8 +1,9 @@
 package com.spacecodee.library_book_backend.mappers.book;
 
-import com.spacecodee.library_book_backend.dto.book.BookADto;
-import com.spacecodee.library_book_backend.dto.book.BookLDto;
+import com.spacecodee.library_book_backend.dto.book.BookDto;
 import com.spacecodee.library_book_backend.dto.book.BookUDto;
+import com.spacecodee.library_book_backend.dto.book.flat.BookFlatADto;
+import com.spacecodee.library_book_backend.dto.book.flat.BookFlatUDto;
 import com.spacecodee.library_book_backend.entity.BookEntity;
 import com.spacecodee.library_book_backend.mappers.category.book.ICategoryBookEntityMapper;
 import org.mapstruct.*;
@@ -13,54 +14,51 @@ public interface IBookEntityMapper {
 
     IBookEntityMapper INSTANCE = Mappers.getMapper(IBookEntityMapper.class);
 
-    //add book
-    @Mapping(target = "bookId", ignore = true)
-    @Mapping(target = "categoryBookEntity", ignore = true)
+    //update book
+    @Mapping(source = "id", target = "bookId")
     @Mapping(source = "name", target = "bookName")
     @Mapping(source = "pages", target = "bookPages")
     @Mapping(source = "author", target = "bookAuthor")
-    @Mapping(source = "urlImage", target = "bookUrlImage")
-    @Mapping(source = "urlPdf", target = "bookUrlPdf")
+    @Mapping(source = "image", target = "bookUrlImage")
+    @Mapping(source = "pdf", target = "bookUrlPdf")
     @Mapping(source = "description", target = "bookDescription")
-    BookEntity aDtoToEntity(BookADto aDto);
-
-    @InheritInverseConfiguration(name = "aDtoToEntity")
-    BookADto entityToADto(BookEntity entity);
-
-    @InheritInverseConfiguration(name = "entityToADto")
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    BookEntity updateEntityFromADto(BookADto aDto, @MappingTarget BookEntity entity);
-
-    //update book
-    @Mapping(source = "id", target = "bookId")
-    @InheritInverseConfiguration(name = "entityToADto")
+    @Mapping(target = "categoryBookEntity", ignore = true)
     BookEntity uDtoToEntity(BookUDto dto);
 
     @InheritInverseConfiguration(name = "uDtoToEntity")
     BookUDto entityToUDto(BookEntity entity);
 
-    @InheritInverseConfiguration(name = "entityToUDto")
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    BookEntity updateEntityFromUDto(BookUDto dto, @MappingTarget BookEntity entity);
-
     //list dto
     @InheritInverseConfiguration(name = "entityToUDto")
-    BookEntity lDtoToEntity(BookLDto bookLDto);
+    BookEntity lDtoToEntity(BookDto bookDto);
 
     @AfterMapping
-    default void linkCategoryBookEntity(@MappingTarget BookEntity entity, BookLDto dto) {
+    default void linkCategoryBookEntity(@MappingTarget BookEntity entity, BookDto dto) {
         entity.setCategoryBookEntity(ICategoryBookEntityMapper.INSTANCE.uDtoToEntity(dto.getCategoryBookDto()));
     }
 
     @InheritInverseConfiguration(name = "lDtoToEntity")
-    BookLDto entityToLDto(BookEntity bookEntity);
+    BookDto entityToLDto(BookEntity bookEntity);
 
     @AfterMapping
-    default void linkCategoryBookDto(@MappingTarget BookLDto dto, BookEntity entity) {
+    default void linkCategoryBookDto(@MappingTarget BookDto dto, BookEntity entity) {
         dto.setCategoryBookDto(ICategoryBookEntityMapper.INSTANCE.entityToUDto(entity.getCategoryBookEntity()));
     }
 
-    @InheritInverseConfiguration(name = "entityToLDto")
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    BookEntity updateEntityLDto(BookLDto bookLDto, @MappingTarget BookEntity bookEntity);
+    //flat u dto
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "pages", target = "pages")
+    @Mapping(source = "author", target = "author")
+    @Mapping(source = "image", target = "image")
+    @Mapping(source = "pdf", target = "pdf")
+    @Mapping(source = "description", target = "description")
+    @Mapping(target = "categoryBookDto", ignore = true)
+    BookDto toLDto(BookFlatUDto dto);
+
+    //flat a dto
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "categoryBookDto", ignore = true)
+    @InheritConfiguration(name = "toLDto")
+    BookDto toLDto(BookFlatADto dto);
 }

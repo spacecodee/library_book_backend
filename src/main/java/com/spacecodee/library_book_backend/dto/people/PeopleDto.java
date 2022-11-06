@@ -16,7 +16,6 @@ import java.io.Serializable;
 public class PeopleDto implements Serializable {
 
     private int id;
-
     @NotEmpty(message = "{not.empty.people.name}")
     private String name;
     @NotEmpty(message = "{not.empty.people.surname}")

@@ -42,7 +42,7 @@ public class ApplicationSecurityConfig {
         httpSecurity.cors().and().csrf().disable()
                     .authorizeRequests()
                     .antMatchers(
-                            "/api/v1/auth/**",
+                            "/v1/auth/**",
                             "/v1/book/**",
                             "/v1/category-book/**",
                             "/v1/user-system/**",

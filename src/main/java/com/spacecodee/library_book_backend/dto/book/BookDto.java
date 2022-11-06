@@ -15,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class BookLDto extends BookUDto implements Serializable {
+public class BookDto extends BookUDto implements Serializable {
 
     @NotNull(message = "{not.null.category.book}")
     private CategoryBookUDto categoryBookDto;

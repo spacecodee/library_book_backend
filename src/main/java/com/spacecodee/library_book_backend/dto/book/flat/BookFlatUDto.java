@@ -1,6 +1,5 @@
-package com.spacecodee.library_book_backend.dto.book;
+package com.spacecodee.library_book_backend.dto.book.flat;
 
-import com.spacecodee.library_book_backend.dto.book.flat.BookFlatDto;
 import lombok.*;
 
 import java.io.Serializable;
@@ -14,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class BookUDto extends BookFlatDto implements Serializable {
+public class BookFlatUDto extends BookFlatADto implements Serializable {
 
     private int id;
 }

@@ -8,6 +8,7 @@ import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
 import com.spacecodee.library_book_backend.service.role.RoleServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -21,15 +22,17 @@ public class UserSystemServiceImpl {
     private final RoleServiceImpl roleService;
     private final UserSystemService userSystemService;
     private final ExceptionShortComponent exceptionShortComponent;
+    private final PasswordEncoder passwordEncoder;
 
     private static final String GET_BY_ID_ERROR_USER_CLIENT = "get.by.id.error.user.system";
     private static final Logger LOGGER = LoggerFactory.getLogger(UserSystemServiceImpl.class);
 
     public UserSystemServiceImpl(RoleServiceImpl roleService, UserSystemService userSystemService,
-                                 ExceptionShortComponent exceptionShortComponent) {
+                                 ExceptionShortComponent exceptionShortComponent, PasswordEncoder passwordEncoder) {
         this.roleService = roleService;
         this.userSystemService = userSystemService;
         this.exceptionShortComponent = exceptionShortComponent;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UserSystemDto> getAll() {
@@ -85,6 +88,7 @@ public class UserSystemServiceImpl {
         this.existByUsername(lang, dto.getUsername());
         this.existByPhone(lang, dto.getPeopleDto().getPhone());
         try {
+            dto.setPassword(this.passwordEncoder.encode(dto.getPassword()));
             this.userSystemService.add(dto);
         } catch (NotAddSqlException e) {
             UserSystemServiceImpl.LOGGER.error("error adding: {}", e.getMessage());
