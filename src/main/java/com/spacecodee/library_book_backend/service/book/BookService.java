@@ -1,6 +1,6 @@
 package com.spacecodee.library_book_backend.service.book;
 
-import com.spacecodee.library_book_backend.dto.book.BookLDto;
+import com.spacecodee.library_book_backend.dto.book.BookDto;
 import com.spacecodee.library_book_backend.mappers.book.IBookEntityMapper;
 import com.spacecodee.library_book_backend.repository.IBookRepository;
 import com.spacecodee.library_book_backend.service.generics.IFirstService;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BookService implements IFirstService<BookLDto> {
+public class BookService implements IFirstService<BookDto> {
 
     private final IBookRepository iBookRepository;
 
@@ -22,8 +22,8 @@ public class BookService implements IFirstService<BookLDto> {
     }
 
     @Override
-    public List<BookLDto> getAll() {
-        final List<BookLDto> booksLDto = new ArrayList<>();
+    public List<BookDto> getAll() {
+        final List<BookDto> booksLDto = new ArrayList<>();
         this.iBookRepository.findAll().forEach(bookEntity -> booksLDto.add(
                 IBookEntityMapper.INSTANCE.entityToLDto(bookEntity)));
 
@@ -31,14 +31,14 @@ public class BookService implements IFirstService<BookLDto> {
     }
 
     @Override
-    public Optional<BookLDto> getById(int id) {
+    public Optional<BookDto> getById(int id) {
         return this.iBookRepository
                 .findById(id).or(Optional::empty)
                 .map(IBookEntityMapper.INSTANCE::entityToLDto);
     }
 
     @Override
-    public Optional<BookLDto> getByName(String name) {
+    public Optional<BookDto> getByName(String name) {
         return this.iBookRepository
                 .findByBookName(name).or(Optional::empty)
                 .map(IBookEntityMapper.INSTANCE::entityToLDto);
@@ -56,13 +56,13 @@ public class BookService implements IFirstService<BookLDto> {
 
     @Transactional(rollbackFor = SQLException.class)
     @Override
-    public void add(BookLDto dto) {
+    public void add(BookDto dto) {
         this.iBookRepository.save(IBookEntityMapper.INSTANCE.lDtoToEntity(dto));
     }
 
     @Transactional(rollbackFor = SQLException.class)
     @Override
-    public void update(BookLDto dto) {
+    public void update(BookDto dto) {
         this.iBookRepository.save(IBookEntityMapper.INSTANCE.lDtoToEntity(dto));
     }
 

@@ -6,6 +6,7 @@ import com.spacecodee.library_book_backend.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.dto.jwt.JwtDto;
 import com.spacecodee.library_book_backend.dto.user.UserDto;
 import com.spacecodee.library_book_backend.dto.user.client.UserClientADto;
+import com.spacecodee.library_book_backend.dto.user.system.UserSystemDto;
 import com.spacecodee.library_book_backend.service.auth.AuthServiceImpl;
 import com.spacecodee.library_book_backend.service.user.client.UserClientServiceImpl;
 import com.spacecodee.library_book_backend.service.user.system.UserSystemServiceImpl;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/v1/auth")
 public class AuthController {
 
     private final AuthServiceImpl authService;
@@ -40,6 +41,17 @@ public class AuthController {
 
         this.userClientService.add(lang, dto);
         responseApi.setMessage(this.messageUtilComponent.getMessage("add.success.user.client", lang));
+        responseApi.setHttpStatus(HttpStatus.OK);
+        return new ResponseEntity<>(responseApi, HttpStatus.OK);
+    }
+
+    @PostMapping("/register-user")
+    public ResponseEntity<HttpResponseApi> registerClient(@RequestParam(defaultValue = "en") String lang,
+                                                          @Valid() @RequestBody UserSystemDto dto) {
+        HttpResponseApi responseApi = new HttpResponseApi();
+
+        this.userSystemService.add(lang, dto);
+        responseApi.setMessage(this.messageUtilComponent.getMessage("add.success.user.system", lang));
         responseApi.setHttpStatus(HttpStatus.OK);
         return new ResponseEntity<>(responseApi, HttpStatus.OK);
     }
