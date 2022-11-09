@@ -3,6 +3,8 @@ package com.spacecodee.library_book_backend.service.rating.book;
 import com.spacecodee.library_book_backend.dto.rating.book.UserRatingBookDto;
 import com.spacecodee.library_book_backend.dto.rating.book.UserRatingBookKeyDto;
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
+import com.spacecodee.library_book_backend.exceptions.NotDeleteSqlException;
+import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
 import com.spacecodee.library_book_backend.mappers.rating.book.IUserRatingBookKeyMapper;
 import com.spacecodee.library_book_backend.mappers.rating.book.IUserRatingBookMapper;
 import com.spacecodee.library_book_backend.repository.IUserRatingBookRepository;
@@ -32,5 +34,15 @@ public class RatingBookService {
     @Transactional(rollbackFor = NotAddSqlException.class)
     public void add(UserRatingBookDto dto) {
         this.iUserRatingBookRepository.save(IUserRatingBookMapper.INSTANCE.dtoToEntity(dto));
+    }
+
+    @Transactional(rollbackFor = NotUpdateSqlException.class)
+    public void update(UserRatingBookDto dto) {
+        this.iUserRatingBookRepository.save(IUserRatingBookMapper.INSTANCE.dtoToEntity(dto));
+    }
+
+    @Transactional(rollbackFor = NotDeleteSqlException.class)
+    public void delete(UserRatingBookKeyDto dto) {
+        this.iUserRatingBookRepository.deleteById(IUserRatingBookKeyMapper.INSTANCE.toEntity(dto));
     }
 }

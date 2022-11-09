@@ -1,5 +1,6 @@
 package com.spacecodee.library_book_backend.controller.user.client;
 
+import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdminOrUser;
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdminOrUserOrClient;
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
 import com.spacecodee.library_book_backend.core.controller.IRDController;
@@ -29,6 +30,7 @@ public class UserClientController implements IRDController<UserClientDto, Intege
         this.messageUtilComponent = messageUtilComponent;
     }
 
+    @IsAuthenticatedAsAdminOrUser
     @Override
     public ResponseEntity<HttpResponseApiMsg<List<UserClientDto>>> list(
             @RequestParam(defaultValue = "en") String lang) {
@@ -57,6 +59,7 @@ public class UserClientController implements IRDController<UserClientDto, Intege
         return new ResponseEntity<>(httpResponseApiMsg, HttpStatus.OK);
     }
 
+    @IsAuthenticatedAsAdminOrUserOrClient
     @Override
     public ResponseEntity<HttpResponseApi> delete(String lang, Integer id) {
         HttpResponseApi httpResponseApiMsg = new HttpResponseApi();

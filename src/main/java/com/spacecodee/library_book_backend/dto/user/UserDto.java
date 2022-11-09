@@ -11,8 +11,8 @@ import javax.validation.constraints.NotEmpty;
 @ToString
 public class UserDto {
 
-    @NotEmpty(message = "Username is required")
+    @NotEmpty(message = "{is.required.username}")
     private String username;
-    @NotEmpty(message = "Password is required")
+    @NotEmpty(message = "{is.required.password}")
     private String password;
 }

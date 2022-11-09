@@ -1,5 +1,6 @@
 package com.spacecodee.library_book_backend.controller.user.system;
 
+import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdminOrUser;
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
 import com.spacecodee.library_book_backend.core.controller.IRDController;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
@@ -26,6 +27,7 @@ public class UserSystemController implements IRDController<UserSystemDto, Intege
         this.messageUtilComponent = messageUtilComponent;
     }
 
+    @IsAuthenticatedAsAdminOrUser
     @Override
     public ResponseEntity<HttpResponseApiMsg<List<UserSystemDto>>> list(String lang) {
         final HttpResponseApiMsg<List<UserSystemDto>> httpResponseApiMsg = new HttpResponseApiMsg<>();
@@ -43,6 +45,7 @@ public class UserSystemController implements IRDController<UserSystemDto, Intege
         return new ResponseEntity<>(httpResponseApiMsg, HttpStatus.OK);
     }
 
+    @IsAuthenticatedAsAdminOrUser
     @Override
     public ResponseEntity<HttpResponseApiMsg<UserSystemDto>> getById(String lang, int id) {
         final HttpResponseApiMsg<UserSystemDto> httpResponseApiMsg = new HttpResponseApiMsg<>();

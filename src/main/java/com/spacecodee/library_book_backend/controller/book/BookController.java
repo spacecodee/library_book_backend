@@ -48,6 +48,7 @@ public class BookController implements ICRUDController<BookFlatADto, BookDto, Bo
 
     @Override
     public ResponseEntity<HttpResponseApiMsg<BookDto>> getById(String lang, int id) {
+        System.out.println("lang = " + lang);
         final HttpResponseApiMsg<BookDto> httpResponseApiMsg = new HttpResponseApiMsg<>();
         httpResponseApiMsg.setData(this.bookService.getById(lang, id));
         httpResponseApiMsg.setMessage(this.messageUtilComponent.getMessage("get.by.id.success.book", lang));

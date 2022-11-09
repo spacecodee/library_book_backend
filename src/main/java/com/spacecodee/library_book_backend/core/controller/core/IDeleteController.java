@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface IDeleteController<D> {
 
     @IsAuthenticatedAsAdminOrUser
-    @DeleteMapping("/{d}")
+    @DeleteMapping("/{id}")
     ResponseEntity<HttpResponseApi> delete(@RequestParam(defaultValue = "en") String lang,
-                                           @PathVariable D d);
+                                           @PathVariable D id);
 }

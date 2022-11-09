@@ -64,7 +64,7 @@ public class BookServiceImpl {
 
     public void add(String lang, BookFlatADto dto) {
         this.existByName(lang, dto.getName());
-        BookDto book = getBookLDto(lang, dto);
+        BookDto book = this.getBookLDto(lang, dto);
 
         try {
             this.bookService.add(book);
@@ -77,7 +77,7 @@ public class BookServiceImpl {
 
     public void update(String lang, BookFlatUDto dto) {
         this.noExistById(lang, dto.getId());
-        BookDto book = getBookLDto(lang, dto);
+        BookDto book = this.getBookLDto(lang, dto);
 
         try {
             List<BookDto> books = this.bookService.getAll();
