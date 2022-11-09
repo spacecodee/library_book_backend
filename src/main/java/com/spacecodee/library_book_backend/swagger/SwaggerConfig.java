@@ -2,7 +2,9 @@ package com.spacecodee.library_book_backend.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.*;
@@ -13,6 +15,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import java.util.Collections;
 import java.util.List;
 
+@Import({BeanValidatorPluginsConfiguration.class})
 @Configuration
 public class SwaggerConfig implements WebMvcConfigurer {
 
@@ -54,5 +57,10 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 "www.licencia.com",
                 Collections.emptyList()
         );
+    }
+
+    @Bean
+    public EmailAnnotationPlugin emailPlugin() {
+        return new EmailAnnotationPlugin();
     }
 }
