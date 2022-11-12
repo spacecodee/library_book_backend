@@ -49,7 +49,7 @@ public class CategoryBookController implements ICategoryBookController {
 
     @Override
     public ResponseEntity<HttpResponseApiMsg<CategoryBookDto>> getByCategoryId(String lang, int id) {
-        this.categoryResponse.setData(this.categoryBookService.getById(lang, id));
+        this.categoryResponse.setData(this.categoryBookService.getByCategoryId(lang, id));
         this.categoryResponse.setMessage(
                 this.messageUtilComponent.getMessage("get.by.id.success.category.book", lang));
         this.categoryResponse.setHttpStatus(HttpStatus.OK);

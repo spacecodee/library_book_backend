@@ -12,7 +12,5 @@ public interface IBookRepository extends JpaRepository<BookEntity, Integer> {
     Optional<BookAndCategoryAndRatingsEntityInfo> findByBookIdAndRatingBooksEntityUserRatingBookIdRatingUserId(
             int bookId, int ratingUserId);
 
-    Optional<BookEntity> findByBookName(String name);
-
     boolean existsByBookName(String name);
 }

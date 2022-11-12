@@ -19,11 +19,6 @@ public interface IRatingBookReadMapper {
 
     IRatingBookReadMapper INSTANCE = Mappers.getMapper(IRatingBookReadMapper.class);
 
-    default RatingPromedioBookDto getPromedio(@NotNull Set<RatingBookEntityInfo> rating) {
-        var promedio = rating.stream().mapToDouble(RatingBookEntityInfo::getRatingBook).average().orElse(0);
-        return new RatingPromedioBookDto(promedio);
-    }
-
     @Mapping(target = "ratingBook", source = "ratingBook")
     @Mapping(target = "bookId", source = "bookEntity", qualifiedByName = "setBookId")
     @Mapping(target = "bookName", source = "bookEntity", qualifiedByName = "setBookName")
@@ -35,6 +30,15 @@ public interface IRatingBookReadMapper {
     @Mapping(target = "categoryName", source = "bookEntity", qualifiedByName = "setCategoryName")
     @Mapping(target = "ratingPromedioBook", ignore = true)
     GetRatingByIdDto toDto(RatingAndBookEntityInfo info);
+
+    default RatingPromedioBookDto getPromedio(@NotNull Set<RatingBookEntityInfo> rating) {
+        var promedio = rating.stream().mapToDouble(RatingBookEntityInfo::getRatingBook).average().orElse(0);
+        return new RatingPromedioBookDto(promedio);
+    }
+
+    default float getGlobalRating(@NotNull Set<RatingBookEntityInfo> rating) {
+        return (float) rating.stream().mapToDouble(RatingBookEntityInfo::getRatingBook).average().orElse(0);
+    }
 
     @Named("setBookId")
     default int setBookId(@NotNull BookAndCategoryNameEntityInfo bookEntity) {

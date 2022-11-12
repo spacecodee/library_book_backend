@@ -56,7 +56,9 @@ public class ApplicationSecurityConfig {
                     ).permitAll()
                     .antMatchers(
                             HttpMethod.GET,
-                            "/v1/book/**",
+                            "/v1/book/get-all",
+                            "/v1/book/get-by/{id}",
+                            "/v1/book/find-by/{bookId}",
                             "/v1/category-book/**",
                             "/v1/rating-book/list"
                     ).permitAll()

@@ -31,6 +31,6 @@ public interface ICategoryBookReadMapper {
 
     @Named("bookDto")
     default Set<BookAndRatingPromedioDto> setBooks(Set<BookIdNameAuthorImageRatingsEntityInfo> entity) {
-        return IBookReadMapper.INSTANCE.getBooks(entity);
+        return IBookReadMapper.INSTANCE.setBooksRatingPromedio(entity);
     }
 }

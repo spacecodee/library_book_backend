@@ -2,6 +2,7 @@ package com.spacecodee.library_book_backend.mappers.category.book;
 
 import com.spacecodee.library_book_backend.entity.category.book.CategoryBookEntity;
 import com.spacecodee.library_book_backend.model.vo.category.book.CategoryBookVo;
+import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -16,4 +17,7 @@ public interface ICategoryBookMapper {
     @Mapping(target = "categoryBookId", source = "id")
     @Mapping(target = "booksEntity", ignore = true)
     CategoryBookEntity toEntity(CategoryBookVo aDto);
+
+    @InheritInverseConfiguration(name = "toEntity")
+    CategoryBookVo toVo(CategoryBookEntity categoryBookEntity);
 }

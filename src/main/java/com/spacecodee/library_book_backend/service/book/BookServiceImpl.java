@@ -1,18 +1,17 @@
 package com.spacecodee.library_book_backend.service.book;
 
 import com.spacecodee.library_book_backend.component.ExceptionShortComponent;
-import com.spacecodee.library_book_backend.dto.book.action.BookDto;
-import com.spacecodee.library_book_backend.dto.book.action.BookFlatADto;
-import com.spacecodee.library_book_backend.dto.book.action.BookFlatUDto;
-import com.spacecodee.library_book_backend.dto.book.flat.BookDtoFlat;
-import com.spacecodee.library_book_backend.entity.book.BookAllFlatDto;
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotDeleteSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
-import com.spacecodee.library_book_backend.mappers.book.IBookEntityMapper;
+import com.spacecodee.library_book_backend.mappers.rating.book.IRatingBookKeyMapper;
+import com.spacecodee.library_book_backend.model.dto.book.BookAndCategoryDto;
+import com.spacecodee.library_book_backend.model.dto.book.ShowBookDto;
+import com.spacecodee.library_book_backend.model.vo.book.BookVo;
 import com.spacecodee.library_book_backend.service.category.book.CategoryBookServiceImpl;
 import com.spacecodee.library_book_backend.service.rating.book.RatingBookService;
 import com.spacecodee.library_book_backend.utils.Utils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -40,35 +39,26 @@ public class BookServiceImpl {
         this.exceptionShortComponent = exceptionShortComponent;
     }
 
-    public List<BookDto> getAll() {
-        return this.bookService.getAll();
+    public List<BookAndCategoryDto> findAll() {
+        return this.bookService.findAll();
     }
 
-    public List<BookAllFlatDto> getAllTest() {
-        return this.bookService.getAllTest();
-    }
-
-    public BookDto getById(String lang, int id) {
+    public BookAndCategoryDto getById(String lang, int id) {
         return this.bookService
                 .getById(id)
                 .orElseThrow(() -> this.exceptionShortComponent.notFound(
                         BookServiceImpl.GET_BY_ID_ERROR_BOOK, lang));
     }
 
-    public BookDtoFlat getByBookId(String lang, int bookId, int clientId) {
-        var rating = this.ratingBookService.getRatingByBookId(bookId, clientId);
-        var promedio = this.bookService
-                .getByBookIdAndClientId(bookId, clientId)
-                .orElseThrow(() -> this.exceptionShortComponent.notFound(
-                        BookServiceImpl.GET_BY_ID_ERROR_BOOK, lang));
-        promedio.setRating(rating);
-        return promedio;
-    }
-
-    public BookDto getByName(String lang, String name) {
-        return this.bookService
-                .getByName(name)
-                .orElseThrow(() -> this.exceptionShortComponent.notFound("get.by.name.error.book", lang));
+    public ShowBookDto getByBookAndClientId(String lang, int bookId, int clientId) {
+        var rating = this.ratingBookService
+                .getRatingById(IRatingBookKeyMapper.INSTANCE.toDto(bookId, clientId)).orElse(0F);
+        var dto = this.bookService
+                .getByBookAndClientId(bookId, clientId)
+                .orElseThrow(() -> this.exceptionShortComponent
+                        .notFound(GET_BY_ID_ERROR_BOOK, lang));
+        dto.setRating(rating);
+        return dto;
     }
 
     public void noExistById(String lang, int id) {
@@ -83,12 +73,12 @@ public class BookServiceImpl {
         }
     }
 
-    public void add(String lang, BookFlatADto dto) {
-        this.existByName(lang, dto.getName());
-        BookDto book = this.getBookLDto(lang, dto);
-
+    public void add(String lang, @NotNull BookVo vo) {
+        this.existByName(lang, vo.getName());
+        var category = this.categoryBookService.getById(lang, vo.getCategoryBookVo().getId());
+        vo.setCategoryBookVo(category);
         try {
-            this.bookService.add(book);
+            this.bookService.add(vo);
         } catch (NotAddSqlException e) {
             e.printStackTrace(System.err);
             BookServiceImpl.LOGGER.error("error registering: {}", e.getMessage());
@@ -96,21 +86,22 @@ public class BookServiceImpl {
         }
     }
 
-    public void update(String lang, BookFlatUDto dto) {
-        this.noExistById(lang, dto.getId());
-        BookDto book = this.getBookLDto(lang, dto);
+    public void update(String lang, BookVo vo) {
+        this.noExistById(lang, vo.getId());
+        var category = this.categoryBookService.getById(lang, vo.getCategoryBookVo().getId());
+        vo.setCategoryBookVo(category);
 
         try {
-            List<BookDto> books = this.bookService.getAll();
-            books.forEach(bookLDto -> {
-                if (bookLDto.getName().equalsIgnoreCase(dto.getName())) {
-                    if (bookLDto.getId() != dto.getId()) {
+            final var books = this.findAll();
+            books.forEach(book -> {
+                if (book.getName().equalsIgnoreCase(vo.getName())) {
+                    if (book.getId() != vo.getId()) {
                         throw this.exceptionShortComponent.existFound("get.by.name.exists.book", lang);
                     }
                 }
-                else if (bookLDto.getId() == dto.getId()
-                        || Utils.isNotEqualsName(bookLDto.getName(), dto.getName())) {
-                    this.bookService.update(book);
+                else if (book.getId() == vo.getId()
+                        || Utils.isNotEqualsName(book.getName(), vo.getName())) {
+                    this.bookService.update(vo);
                 }
             });
         } catch (NotUpdateSqlException exception) {
@@ -129,19 +120,5 @@ public class BookServiceImpl {
             BookServiceImpl.LOGGER.error("error deleting: {}", exception.getMessage());
             throw this.exceptionShortComponent.notAddSql("delete.error.book", lang);
         }
-    }
-
-    private BookDto getBookLDto(String lang, BookFlatADto dto) {
-        var category = this.categoryBookService.getById(lang, dto.getCategoryId());
-        var book = IBookEntityMapper.INSTANCE.toLDto(dto);
-        book.setCategoryBookDto(category);
-        return book;
-    }
-
-    private BookDto getBookLDto(String lang, BookFlatUDto dto) {
-        var category = this.categoryBookService.getById(lang, dto.getCategoryId());
-        var book = IBookEntityMapper.INSTANCE.toLDto(dto);
-        book.setCategoryBookDto(category);
-        return book;
     }
 }

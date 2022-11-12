@@ -1,22 +1,18 @@
 package com.spacecodee.library_book_backend.service.book;
 
-import com.spacecodee.library_book_backend.core.service.ICRUDService;
-import com.spacecodee.library_book_backend.dto.book.action.BookDto;
-import com.spacecodee.library_book_backend.dto.book.flat.BookDtoFlat;
-import com.spacecodee.library_book_backend.entity.book.BookAllFlatDto;
-import com.spacecodee.library_book_backend.mappers.book.IBookEntityMapper;
+import com.spacecodee.library_book_backend.mappers.book.IBookMapper;
 import com.spacecodee.library_book_backend.mappers.book.IBookReadMapper;
+import com.spacecodee.library_book_backend.model.dto.book.BookAndCategoryDto;
+import com.spacecodee.library_book_backend.model.dto.book.ShowBookDto;
+import com.spacecodee.library_book_backend.model.vo.book.BookVo;
 import com.spacecodee.library_book_backend.repository.IBookRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BookService implements ICRUDService<BookDto, BookDto, BookDto, Integer> {
+public class BookService implements IBookService {
 
     private final IBookRepository iBookRepository;
 
@@ -25,41 +21,23 @@ public class BookService implements ICRUDService<BookDto, BookDto, BookDto, Inte
     }
 
     @Override
-    public List<BookDto> getAll() {
-        final List<BookDto> booksLDto = new ArrayList<>();
-        this.iBookRepository.findAll().forEach(bookEntity -> booksLDto.add(
-                IBookEntityMapper.INSTANCE.entityToLDto(bookEntity)));
-
-        return booksLDto;
-    }
-
-    public List<BookAllFlatDto> getAllTest() {
-        final List<BookAllFlatDto> booksLDto = new ArrayList<>();
-        this.iBookRepository.findAll().forEach(bookEntity -> booksLDto.add(
-                IBookReadMapper.INSTANCE.toAllDto(bookEntity)));
-
-        return booksLDto;
+    public List<BookAndCategoryDto> findAll() {
+        return IBookReadMapper.INSTANCE.setBooksAndCategoryDto(this.iBookRepository.findAll());
     }
 
     @Override
-    public Optional<BookDto> getById(int id) {
+    public Optional<BookAndCategoryDto> getById(int id) {
         return this.iBookRepository
-                .findById(id).or(Optional::empty)
-                .map(IBookEntityMapper.INSTANCE::entityToLDto);
-    }
-
-    @Transactional(readOnly = true, rollbackFor = SQLException.class)
-    public Optional<BookDtoFlat> getByBookIdAndClientId(int bookId, int clientId) {
-        return this.iBookRepository
-                .findByBookIdAndRatingBooksEntityUserRatingBookIdRatingUserId(bookId, clientId).or(Optional::empty)
-                .map(IBookReadMapper.INSTANCE::toDto);
+                .findById(id).map(IBookReadMapper.INSTANCE::toDto)
+                .or(Optional::empty);
     }
 
     @Override
-    public Optional<BookDto> getByName(String name) {
+    public Optional<ShowBookDto> getByBookAndClientId(int bookId, int clientId) {
         return this.iBookRepository
-                .findByBookName(name).or(Optional::empty)
-                .map(IBookEntityMapper.INSTANCE::entityToLDto);
+                .findByBookIdAndRatingBooksEntityUserRatingBookIdRatingUserId(bookId, clientId)
+                .map(IBookReadMapper.INSTANCE::toDto)
+                .or(Optional::empty);
     }
 
     @Override
@@ -72,20 +50,18 @@ public class BookService implements ICRUDService<BookDto, BookDto, BookDto, Inte
         return this.iBookRepository.existsByBookName(name);
     }
 
-    @Transactional(rollbackFor = SQLException.class)
     @Override
-    public void add(BookDto dto) {
-        this.iBookRepository.save(IBookEntityMapper.INSTANCE.lDtoToEntity(dto));
-    }
-
-    @Transactional(rollbackFor = SQLException.class)
-    @Override
-    public void update(BookDto dto) {
-        this.iBookRepository.save(IBookEntityMapper.INSTANCE.lDtoToEntity(dto));
+    public void add(BookVo dto) {
+        this.iBookRepository.save(IBookMapper.INSTANCE.toEntity(dto));
     }
 
     @Override
-    public void delete(Integer id) {
+    public void update(BookVo dto) {
+        this.iBookRepository.save(IBookMapper.INSTANCE.toEntity(dto));
+    }
+
+    @Override
+    public void delete(int id) {
         this.iBookRepository.deleteById(id);
     }
 }

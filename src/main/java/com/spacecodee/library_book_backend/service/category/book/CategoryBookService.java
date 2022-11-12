@@ -36,6 +36,11 @@ public class CategoryBookService implements ICategoryBookService {
     }
 
     @Override
+    public Optional<CategoryBookVo> getById(int id) {
+        return this.iCategoryBookRepository.findById(id).map(ICategoryBookMapper.INSTANCE::toVo);
+    }
+
+    @Override
     public List<CategoryBookAndBookDto> findAll() {
         final List<CategoryBookAndBookDto> categories = new ArrayList<>();
         this.iCategoryBookRepository
@@ -50,19 +55,19 @@ public class CategoryBookService implements ICategoryBookService {
     }
 
     @Override
-    public Optional<CategoryBookAndBookDto> getByIdCategoryBook(int id) {
+    public Optional<CategoryBookAndBookDto> getByCategoryBookId(int id) {
         return this.iCategoryBookRepository
                 .getByCategoryBookId(id).or(Optional::empty)
                 .map(ICategoryBookReadMapper.INSTANCE::toRDto);
     }
 
     @Override
-    public boolean existByCategoryId(int id) {
+    public boolean existById(int id) {
         return this.iCategoryBookRepository.existsById(id);
     }
 
     @Override
-    public boolean existByCategoryName(String name) {
+    public boolean existByName(String name) {
         return this.iCategoryBookRepository.existsByCategoryBookName(name);
     }
 

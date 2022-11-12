@@ -1,4 +1,4 @@
-package com.spacecodee.library_book_backend.dto.rating.book;
+package com.spacecodee.library_book_backend.model.vo.rating.book;
 
 import lombok.*;
 
@@ -13,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode()
 @ToString()
-public class UserRatingBookKeyDto implements Serializable {
+public class RatingBookKeyVo implements Serializable {
     @Positive(message = "{positive.user.id}")
     private int clientId;
     @Positive(message = "{positive.book.id}")

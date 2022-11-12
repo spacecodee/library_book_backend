@@ -33,9 +33,16 @@ public class CategoryBookServiceImpl {
         return this.categoryBookService.getAll();
     }
 
-    public CategoryBookDto getById(String lang, int id) {
+    public CategoryBookDto getByCategoryId(String lang, int id) {
         return this.categoryBookService
                 .getByCategoryId(id)
+                .orElseThrow(() -> this.exceptionShortComponent.notFound(
+                        CategoryBookServiceImpl.GET_BY_ID_ERROR_CATEGORY_BOOK, lang));
+    }
+
+    public CategoryBookVo getById(String lang, int id) {
+        return this.categoryBookService
+                .getById(id)
                 .orElseThrow(() -> this.exceptionShortComponent.notFound(
                         CategoryBookServiceImpl.GET_BY_ID_ERROR_CATEGORY_BOOK, lang));
     }
@@ -46,20 +53,20 @@ public class CategoryBookServiceImpl {
 
     public CategoryBookAndBookDto getByIdCategoryBook(String lang, int id) {
         return this.categoryBookService
-                .getByIdCategoryBook(id)
+                .getByCategoryBookId(id)
                 .orElseThrow(() -> this.exceptionShortComponent.notFound(
                         CategoryBookServiceImpl.GET_BY_ID_ERROR_CATEGORY_BOOK, lang));
     }
 
 
     public void noExistById(String lang, int id) {
-        if (!this.categoryBookService.existByCategoryId(id)) {
+        if (!this.categoryBookService.existById(id)) {
             throw this.exceptionShortComponent.notFound(CategoryBookServiceImpl.GET_BY_ID_ERROR_CATEGORY_BOOK, lang);
         }
     }
 
     public void existByName(String lang, String name) {
-        if (this.categoryBookService.existByCategoryName(name)) {
+        if (this.categoryBookService.existByName(name)) {
             throw this.exceptionShortComponent.existFound("get.by.name.exists.category.book", lang);
         }
     }
