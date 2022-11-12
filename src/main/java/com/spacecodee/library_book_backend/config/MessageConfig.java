@@ -12,7 +12,7 @@ public class MessageConfig {
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasenames("classpath:locale/message", "classpath:validation");
+        messageSource.setBasenames("classpath:locale/message", "classpath:api/api-doc", "classpath:validation");
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }

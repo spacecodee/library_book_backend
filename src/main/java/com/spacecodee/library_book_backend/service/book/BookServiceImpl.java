@@ -1,14 +1,17 @@
 package com.spacecodee.library_book_backend.service.book;
 
 import com.spacecodee.library_book_backend.component.ExceptionShortComponent;
-import com.spacecodee.library_book_backend.dto.book.BookDto;
-import com.spacecodee.library_book_backend.dto.book.flat.BookFlatADto;
-import com.spacecodee.library_book_backend.dto.book.flat.BookFlatUDto;
+import com.spacecodee.library_book_backend.dto.book.action.BookDto;
+import com.spacecodee.library_book_backend.dto.book.action.BookFlatADto;
+import com.spacecodee.library_book_backend.dto.book.action.BookFlatUDto;
+import com.spacecodee.library_book_backend.dto.book.flat.BookDtoFlat;
+import com.spacecodee.library_book_backend.entity.book.BookAllFlatDto;
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotDeleteSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
 import com.spacecodee.library_book_backend.mappers.book.IBookEntityMapper;
 import com.spacecodee.library_book_backend.service.category.book.CategoryBookServiceImpl;
+import com.spacecodee.library_book_backend.service.rating.book.RatingBookService;
 import com.spacecodee.library_book_backend.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,15 +23,19 @@ import java.util.List;
 public class BookServiceImpl {
 
     private final CategoryBookServiceImpl categoryBookService;
+
+    private final RatingBookService ratingBookService;
     private final BookService bookService;
     private final ExceptionShortComponent exceptionShortComponent;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookServiceImpl.class);
     private static final String GET_BY_ID_ERROR_BOOK = "get.by.id.error.book";
 
-    public BookServiceImpl(CategoryBookServiceImpl categoryBookService, BookService bookService,
+    public BookServiceImpl(CategoryBookServiceImpl categoryBookService, RatingBookService ratingBookService,
+                           BookService bookService,
                            ExceptionShortComponent exceptionShortComponent) {
         this.categoryBookService = categoryBookService;
+        this.ratingBookService = ratingBookService;
         this.bookService = bookService;
         this.exceptionShortComponent = exceptionShortComponent;
     }
@@ -37,11 +44,25 @@ public class BookServiceImpl {
         return this.bookService.getAll();
     }
 
+    public List<BookAllFlatDto> getAllTest() {
+        return this.bookService.getAllTest();
+    }
+
     public BookDto getById(String lang, int id) {
         return this.bookService
                 .getById(id)
                 .orElseThrow(() -> this.exceptionShortComponent.notFound(
                         BookServiceImpl.GET_BY_ID_ERROR_BOOK, lang));
+    }
+
+    public BookDtoFlat getByBookId(String lang, int bookId, int clientId) {
+        var rating = this.ratingBookService.getRatingByBookId(bookId, clientId);
+        var promedio = this.bookService
+                .getByBookIdAndClientId(bookId, clientId)
+                .orElseThrow(() -> this.exceptionShortComponent.notFound(
+                        BookServiceImpl.GET_BY_ID_ERROR_BOOK, lang));
+        promedio.setRating(rating);
+        return promedio;
     }
 
     public BookDto getByName(String lang, String name) {

@@ -1,10 +1,12 @@
 package com.spacecodee.library_book_backend.service.rating.book;
 
 import com.spacecodee.library_book_backend.component.ExceptionShortComponent;
-import com.spacecodee.library_book_backend.dto.book.BookUDto;
+import com.spacecodee.library_book_backend.dto.book.action.BookUDto;
 import com.spacecodee.library_book_backend.dto.rating.book.RatingBookDto;
 import com.spacecodee.library_book_backend.dto.rating.book.UserRatingBookDto;
 import com.spacecodee.library_book_backend.dto.rating.book.UserRatingBookKeyDto;
+import com.spacecodee.library_book_backend.dto.rating.book.read.GetRatingByIdDto;
+import com.spacecodee.library_book_backend.dto.rating.book.read.RatingBookRDto;
 import com.spacecodee.library_book_backend.dto.user.client.UserClientDto;
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotDeleteSqlException;
@@ -16,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RatingBookServiceImpl {
 
@@ -26,6 +30,7 @@ public class RatingBookServiceImpl {
     private final ExceptionShortComponent exceptionShortComponent;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RatingBookServiceImpl.class);
+    private static final String GET_BY_ID_ERROR_RATING_BOOK = "get.by.id.error.rating.book";
 
     public RatingBookServiceImpl(RatingBookService ratingBookService, BookServiceImpl bookService,
                                  UserClientServiceImpl userClientService,
@@ -36,10 +41,24 @@ public class RatingBookServiceImpl {
         this.exceptionShortComponent = exceptionShortComponent;
     }
 
-    public UserRatingBookDto getById(String lang, UserRatingBookKeyDto dto) {
+    public List<RatingBookRDto> list() {
+        return this.ratingBookService.getAll();
+    }
+
+    public GetRatingByIdDto getById(String lang, int userId, int bookId) {
+        float ratingPromedio = this.getPromedioByBookId(bookId);
+        GetRatingByIdDto rating = this.ratingBookService
+                .getById(userId, bookId)
+                .orElseThrow(() -> this.exceptionShortComponent.notFound(GET_BY_ID_ERROR_RATING_BOOK, lang));
+        rating.setRatingPromedioBook(ratingPromedio);
+        return rating;
+    }
+
+
+    public float getPromedioByBookId(int bookId) {
         return this.ratingBookService
-                .getById(dto)
-                .orElseThrow(() -> this.exceptionShortComponent.notFound("get.by.id.error.rating.book", lang));
+                .getPromedioByBookId(bookId)
+                .orElse(0F);
     }
 
     private void existRating(String lang, UserRatingBookKeyDto dto) {
@@ -50,7 +69,7 @@ public class RatingBookServiceImpl {
 
     private void noExistRating(String lang, UserRatingBookKeyDto dto) {
         if (!this.ratingBookService.existRating(dto)) {
-            throw this.exceptionShortComponent.existFound("get.by.id.error.rating.book", lang);
+            throw this.exceptionShortComponent.existFound(GET_BY_ID_ERROR_RATING_BOOK, lang);
         }
     }
 

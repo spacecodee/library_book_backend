@@ -1,7 +1,7 @@
 package com.spacecodee.library_book_backend.core.controller;
 
 import com.spacecodee.library_book_backend.core.controller.core.IDeleteController;
-import com.spacecodee.library_book_backend.core.controller.core.IReadCrud;
+import com.spacecodee.library_book_backend.core.controller.core.IReadController;
 
-public interface IRDController<E, D> extends IReadCrud<E>, IDeleteController<D> {
+public interface IRDController<E, D> extends IReadController<E>, IDeleteController<D> {
 }

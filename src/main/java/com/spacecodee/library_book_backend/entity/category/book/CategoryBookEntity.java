@@ -1,5 +1,6 @@
-package com.spacecodee.library_book_backend.entity;
+package com.spacecodee.library_book_backend.entity.category.book;
 
+import com.spacecodee.library_book_backend.entity.book.BookEntity;
 import lombok.*;
 
 import javax.persistence.*;

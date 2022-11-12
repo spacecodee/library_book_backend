@@ -1,12 +1,12 @@
 package com.spacecodee.library_book_backend.service.category.book;
 
 import com.spacecodee.library_book_backend.component.ExceptionShortComponent;
-import com.spacecodee.library_book_backend.dto.category.book.CategoryBookADto;
-import com.spacecodee.library_book_backend.dto.category.book.CategoryBookLDto;
-import com.spacecodee.library_book_backend.dto.category.book.CategoryBookUDto;
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotDeleteSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
+import com.spacecodee.library_book_backend.model.dto.category.book.CategoryBookAndBookDto;
+import com.spacecodee.library_book_backend.model.dto.category.book.CategoryBookDto;
+import com.spacecodee.library_book_backend.model.vo.category.book.CategoryBookVo;
 import com.spacecodee.library_book_backend.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,36 +29,42 @@ public class CategoryBookServiceImpl {
         this.exceptionShortComponent = exceptionShortComponent;
     }
 
-    public List<CategoryBookLDto> getAll() {
+    public List<CategoryBookDto> getAll() {
         return this.categoryBookService.getAll();
     }
 
-    public CategoryBookLDto getById(String lang, int id) {
+    public CategoryBookDto getById(String lang, int id) {
         return this.categoryBookService
-                .getById(id)
+                .getByCategoryId(id)
                 .orElseThrow(() -> this.exceptionShortComponent.notFound(
                         CategoryBookServiceImpl.GET_BY_ID_ERROR_CATEGORY_BOOK, lang));
     }
 
-    public CategoryBookLDto getByName(String lang, String name) {
-        return this.categoryBookService
-                .getByName(name)
-                .orElseThrow(() -> this.exceptionShortComponent.notFound("get.by.name.error.category.book", lang));
+    public List<CategoryBookAndBookDto> findAllBy() {
+        return this.categoryBookService.findAll();
     }
 
+    public CategoryBookAndBookDto getByIdCategoryBook(String lang, int id) {
+        return this.categoryBookService
+                .getByIdCategoryBook(id)
+                .orElseThrow(() -> this.exceptionShortComponent.notFound(
+                        CategoryBookServiceImpl.GET_BY_ID_ERROR_CATEGORY_BOOK, lang));
+    }
+
+
     public void noExistById(String lang, int id) {
-        if (!this.categoryBookService.existById(id)) {
+        if (!this.categoryBookService.existByCategoryId(id)) {
             throw this.exceptionShortComponent.notFound(CategoryBookServiceImpl.GET_BY_ID_ERROR_CATEGORY_BOOK, lang);
         }
     }
 
     public void existByName(String lang, String name) {
-        if (this.categoryBookService.existByName(name)) {
+        if (this.categoryBookService.existByCategoryName(name)) {
             throw this.exceptionShortComponent.existFound("get.by.name.exists.category.book", lang);
         }
     }
 
-    public void add(String lang, CategoryBookADto dto) {
+    public void add(String lang, CategoryBookVo dto) {
         this.existByName(lang, dto.getName());
         try {
             this.categoryBookService.add(dto);
@@ -69,11 +75,11 @@ public class CategoryBookServiceImpl {
         }
     }
 
-    public void update(String lang, CategoryBookUDto dto) {
+    public void update(String lang, CategoryBookVo dto) {
         this.noExistById(lang, dto.getId());
 
         try {
-            List<CategoryBookLDto> categories = this.categoryBookService.getAll();
+            List<CategoryBookDto> categories = this.categoryBookService.getAll();
             categories.forEach(categoryBookLDto -> {
                 if (categoryBookLDto.getName().equalsIgnoreCase(dto.getName())) {
                     if (categoryBookLDto.getId() != dto.getId()) {

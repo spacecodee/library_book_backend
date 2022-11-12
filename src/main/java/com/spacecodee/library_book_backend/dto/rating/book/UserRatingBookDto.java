@@ -1,6 +1,6 @@
 package com.spacecodee.library_book_backend.dto.rating.book;
 
-import com.spacecodee.library_book_backend.dto.book.BookUDto;
+import com.spacecodee.library_book_backend.dto.book.action.BookUDto;
 import com.spacecodee.library_book_backend.dto.user.client.UserClientDto;
 import lombok.*;
 

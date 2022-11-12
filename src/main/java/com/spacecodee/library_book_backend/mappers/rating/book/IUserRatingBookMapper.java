@@ -1,7 +1,10 @@
 package com.spacecodee.library_book_backend.mappers.rating.book;
 
+import com.spacecodee.library_book_backend.dto.book.action.BookUDto;
 import com.spacecodee.library_book_backend.dto.rating.book.RatingBookDto;
 import com.spacecodee.library_book_backend.dto.rating.book.UserRatingBookDto;
+import com.spacecodee.library_book_backend.dto.rating.book.read.RatingBookRDto;
+import com.spacecodee.library_book_backend.entity.book.BookEntity;
 import com.spacecodee.library_book_backend.entity.rating.UserRatingBookEntity;
 import com.spacecodee.library_book_backend.entity.rating.UserRatingBookKeyEntity;
 import com.spacecodee.library_book_backend.mappers.book.IBookEntityMapper;
@@ -62,4 +65,14 @@ public interface IUserRatingBookMapper {
     @Mapping(target = "bookDto", ignore = true)
     @Mapping(target = "userClientDto", ignore = true)
     UserRatingBookDto pDtoToDto(RatingBookDto dto);
+
+    //to dto flat
+    @Mapping(target = "ratingBook", source = "ratingBook")
+    @Mapping(target = "bookDto", source = "bookEntity", qualifiedByName = "bookDto")
+    RatingBookRDto toRDto(UserRatingBookEntity bookEntity);
+
+    @Named("bookDto")
+    default BookUDto getBookDto(BookEntity bookDto) {
+        return IBookEntityMapper.INSTANCE.entityToUDto(bookDto);
+    }
 }

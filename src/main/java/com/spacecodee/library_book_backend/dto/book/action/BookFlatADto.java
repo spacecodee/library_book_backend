@@ -1,12 +1,13 @@
-package com.spacecodee.library_book_backend.dto.book.flat;
+package com.spacecodee.library_book_backend.dto.book.action;
 
+import com.spacecodee.library_book_backend.entity.book.BookEntity;
 import lombok.*;
 
 import javax.validation.constraints.Positive;
 import java.io.Serializable;
 
 /**
- * A DTO for the {@link com.spacecodee.library_book_backend.entity.BookEntity} entity
+ * A DTO for the {@link BookEntity} entity
  */
 @Getter
 @Setter

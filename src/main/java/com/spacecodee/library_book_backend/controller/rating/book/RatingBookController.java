@@ -6,8 +6,9 @@ import com.spacecodee.library_book_backend.component.MessageUtilComponent;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
 import com.spacecodee.library_book_backend.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.dto.rating.book.RatingBookDto;
-import com.spacecodee.library_book_backend.dto.rating.book.UserRatingBookDto;
 import com.spacecodee.library_book_backend.dto.rating.book.UserRatingBookKeyDto;
+import com.spacecodee.library_book_backend.dto.rating.book.read.GetRatingByIdDto;
+import com.spacecodee.library_book_backend.dto.rating.book.read.RatingBookRDto;
 import com.spacecodee.library_book_backend.service.rating.book.RatingBookServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,17 +30,25 @@ public class RatingBookController {
         this.messageUtilComponent = messageUtilComponent;
     }
 
-    public ResponseEntity<HttpResponseApiMsg<List<UserRatingBookDto>>> list(String lang) {
-        return null;
+    @GetMapping("/list")
+    public ResponseEntity<HttpResponseApiMsg<List<RatingBookRDto>>> list(
+            @RequestParam(defaultValue = "en") String lang) {
+        final HttpResponseApiMsg<List<RatingBookRDto>> httpResponseApiMsg = new HttpResponseApiMsg<>();
+
+        httpResponseApiMsg.setData(this.ratingBookService.list());
+        httpResponseApiMsg.setMessage(this.messageUtilComponent.getMessage("get.all.rating.book", lang));
+        httpResponseApiMsg.setHttpStatus(HttpStatus.OK);
+
+        return new ResponseEntity<>(httpResponseApiMsg, HttpStatus.OK);
     }
 
-    @IsAuthenticatedAsClient
-    @GetMapping()
-    public ResponseEntity<HttpResponseApiMsg<UserRatingBookDto>> getById(@RequestParam(defaultValue = "en") String lang,
-                                                                         @RequestParam() int clientId,
-                                                                         @RequestParam() int bookId) {
-        final HttpResponseApiMsg<UserRatingBookDto> httpResponseApiMsg = new HttpResponseApiMsg<>();
-        httpResponseApiMsg.setData(this.ratingBookService.getById(lang, new UserRatingBookKeyDto(clientId, bookId)));
+    @IsAuthenticatedAsAdminOrUserOrClient
+    @GetMapping("/{bookId}")
+    public ResponseEntity<HttpResponseApiMsg<GetRatingByIdDto>> getById(@RequestParam(defaultValue = "en") String lang,
+                                                                        @RequestParam() int clientId,
+                                                                        @PathVariable() int bookId) {
+        final HttpResponseApiMsg<GetRatingByIdDto> httpResponseApiMsg = new HttpResponseApiMsg<>();
+        httpResponseApiMsg.setData(this.ratingBookService.getById(lang, clientId, bookId));
         httpResponseApiMsg.setMessage(this.messageUtilComponent.getMessage("get.by.id.success.user.client", lang));
         httpResponseApiMsg.setHttpStatus(HttpStatus.OK);
         return new ResponseEntity<>(httpResponseApiMsg, HttpStatus.OK);

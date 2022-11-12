@@ -1,6 +1,6 @@
 package com.spacecodee.library_book_backend.entity.rating;
 
-import com.spacecodee.library_book_backend.entity.BookEntity;
+import com.spacecodee.library_book_backend.entity.book.BookEntity;
 import com.spacecodee.library_book_backend.entity.UserClientEntity;
 import lombok.*;
 import org.hibernate.annotations.Cascade;

@@ -57,7 +57,8 @@ public class ApplicationSecurityConfig {
                     .antMatchers(
                             HttpMethod.GET,
                             "/v1/book/**",
-                            "/v1/category-book/**"
+                            "/v1/category-book/**",
+                            "/v1/rating-book/list"
                     ).permitAll()
                     .anyRequest()
                     .authenticated()

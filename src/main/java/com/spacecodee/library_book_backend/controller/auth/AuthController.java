@@ -10,6 +10,7 @@ import com.spacecodee.library_book_backend.dto.user.system.UserSystemDto;
 import com.spacecodee.library_book_backend.service.auth.AuthServiceImpl;
 import com.spacecodee.library_book_backend.service.user.client.UserClientServiceImpl;
 import com.spacecodee.library_book_backend.service.user.system.UserSystemServiceImpl;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,8 @@ public class AuthController {
         this.messageUtilComponent = messageUtilComponent;
     }
 
+    @ApiOperation(value = "Register an User Client Endpoint",
+            notes = "You can register an user System by this endpoint")
     @PostMapping("/register-client")
     public ResponseEntity<HttpResponseApi> registerClient(@RequestParam(defaultValue = "en") String lang,
                                                           @Valid() @RequestBody UserClientADto dto) {
@@ -45,6 +48,8 @@ public class AuthController {
         return new ResponseEntity<>(responseApi, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Register an User System Endpoint",
+            notes = "You can register an User Client by this endpoint")
     @PostMapping("/register-user")
     public ResponseEntity<HttpResponseApi> registerClient(@RequestParam(defaultValue = "en") String lang,
                                                           @Valid() @RequestBody UserSystemDto dto) {
@@ -56,6 +61,7 @@ public class AuthController {
         return new ResponseEntity<>(responseApi, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Login Endpoint", notes = "Here you'll able to login in this app")
     @PostMapping("/login")
     public ResponseEntity<HttpResponseApiMsg<JwtDto>> login(@RequestParam(defaultValue = "en") String lang,
                                                             @Valid @RequestBody UserDto dto) {

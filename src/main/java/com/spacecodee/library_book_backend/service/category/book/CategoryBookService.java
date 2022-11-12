@@ -1,21 +1,19 @@
 package com.spacecodee.library_book_backend.service.category.book;
 
-import com.spacecodee.library_book_backend.dto.category.book.CategoryBookADto;
-import com.spacecodee.library_book_backend.dto.category.book.CategoryBookLDto;
-import com.spacecodee.library_book_backend.dto.category.book.CategoryBookUDto;
-import com.spacecodee.library_book_backend.mappers.category.book.ICategoryBookEntityMapper;
+import com.spacecodee.library_book_backend.mappers.category.book.ICategoryBookMapper;
+import com.spacecodee.library_book_backend.mappers.category.book.ICategoryBookReadMapper;
+import com.spacecodee.library_book_backend.model.dto.category.book.CategoryBookAndBookDto;
+import com.spacecodee.library_book_backend.model.dto.category.book.CategoryBookDto;
+import com.spacecodee.library_book_backend.model.vo.category.book.CategoryBookVo;
 import com.spacecodee.library_book_backend.repository.ICategoryBookRepository;
-import com.spacecodee.library_book_backend.service.generics.IGenericService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CategoryBookService implements IGenericService<CategoryBookLDto, CategoryBookADto, CategoryBookUDto> {
+public class CategoryBookService implements ICategoryBookService {
 
     private final ICategoryBookRepository iCategoryBookRepository;
 
@@ -23,52 +21,59 @@ public class CategoryBookService implements IGenericService<CategoryBookLDto, Ca
         this.iCategoryBookRepository = iCategoryBookRepository;
     }
 
-    @Transactional(readOnly = true, rollbackFor = SQLException.class)
     @Override
-    public List<CategoryBookLDto> getAll() {
-        final List<CategoryBookLDto> categories = new ArrayList<>();
+    public List<CategoryBookDto> getAll() {
+        final List<CategoryBookDto> categories = new ArrayList<>();
         this.iCategoryBookRepository.findAll().forEach(categoryBookEntity -> categories.add(
-                ICategoryBookEntityMapper.INSTANCE.entityToLDto(categoryBookEntity)));
+                ICategoryBookReadMapper.INSTANCE.toDto(categoryBookEntity)));
 
         return categories;
     }
 
-    @Transactional(readOnly = true, rollbackFor = SQLException.class)
     @Override
-    public Optional<CategoryBookLDto> getById(int id) {
-        return this.iCategoryBookRepository
-                .findById(id).or(Optional::empty)
-                .map(ICategoryBookEntityMapper.INSTANCE::entityToLDto);
-    }
-
-    @Transactional(readOnly = true, rollbackFor = SQLException.class)
-    @Override
-    public Optional<CategoryBookLDto> getByName(String name) {
-        return this.iCategoryBookRepository
-                .findByCategoryBookName(name).or(Optional::empty)
-                .map(ICategoryBookEntityMapper.INSTANCE::entityToLDto);
+    public Optional<CategoryBookDto> getByCategoryId(int id) {
+        return this.iCategoryBookRepository.findById(id).map(ICategoryBookReadMapper.INSTANCE::toDto);
     }
 
     @Override
-    public boolean existById(int id) {
+    public List<CategoryBookAndBookDto> findAll() {
+        final List<CategoryBookAndBookDto> categories = new ArrayList<>();
+        this.iCategoryBookRepository
+                .findAllBy()
+                .forEach(entity -> {
+                    if (!entity.getBooksEntity().isEmpty()) {
+                        categories.add(ICategoryBookReadMapper.INSTANCE.toRDto(entity));
+                    }
+                });
+
+        return categories;
+    }
+
+    @Override
+    public Optional<CategoryBookAndBookDto> getByIdCategoryBook(int id) {
+        return this.iCategoryBookRepository
+                .getByCategoryBookId(id).or(Optional::empty)
+                .map(ICategoryBookReadMapper.INSTANCE::toRDto);
+    }
+
+    @Override
+    public boolean existByCategoryId(int id) {
         return this.iCategoryBookRepository.existsById(id);
     }
 
     @Override
-    public boolean existByName(String name) {
+    public boolean existByCategoryName(String name) {
         return this.iCategoryBookRepository.existsByCategoryBookName(name);
     }
 
-    @Transactional(rollbackFor = SQLException.class)
     @Override
-    public void add(CategoryBookADto dto) {
-        this.iCategoryBookRepository.save(ICategoryBookEntityMapper.INSTANCE.aDtoToEntity(dto));
+    public void add(CategoryBookVo dto) {
+        this.iCategoryBookRepository.save(ICategoryBookMapper.INSTANCE.toEntity(dto));
     }
 
-    @Transactional(rollbackFor = SQLException.class)
     @Override
-    public void update(CategoryBookUDto dto) {
-        this.iCategoryBookRepository.save(ICategoryBookEntityMapper.INSTANCE.uDtoToEntity(dto));
+    public void update(CategoryBookVo dto) {
+        this.iCategoryBookRepository.save(ICategoryBookMapper.INSTANCE.toEntity(dto));
     }
 
     @Override

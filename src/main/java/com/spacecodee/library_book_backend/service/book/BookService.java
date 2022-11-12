@@ -1,9 +1,12 @@
 package com.spacecodee.library_book_backend.service.book;
 
-import com.spacecodee.library_book_backend.dto.book.BookDto;
+import com.spacecodee.library_book_backend.core.service.ICRUDService;
+import com.spacecodee.library_book_backend.dto.book.action.BookDto;
+import com.spacecodee.library_book_backend.dto.book.flat.BookDtoFlat;
+import com.spacecodee.library_book_backend.entity.book.BookAllFlatDto;
 import com.spacecodee.library_book_backend.mappers.book.IBookEntityMapper;
+import com.spacecodee.library_book_backend.mappers.book.IBookReadMapper;
 import com.spacecodee.library_book_backend.repository.IBookRepository;
-import com.spacecodee.library_book_backend.service.generics.IFirstService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BookService implements IFirstService<BookDto> {
+public class BookService implements ICRUDService<BookDto, BookDto, BookDto, Integer> {
 
     private final IBookRepository iBookRepository;
 
@@ -30,11 +33,26 @@ public class BookService implements IFirstService<BookDto> {
         return booksLDto;
     }
 
+    public List<BookAllFlatDto> getAllTest() {
+        final List<BookAllFlatDto> booksLDto = new ArrayList<>();
+        this.iBookRepository.findAll().forEach(bookEntity -> booksLDto.add(
+                IBookReadMapper.INSTANCE.toAllDto(bookEntity)));
+
+        return booksLDto;
+    }
+
     @Override
     public Optional<BookDto> getById(int id) {
         return this.iBookRepository
                 .findById(id).or(Optional::empty)
                 .map(IBookEntityMapper.INSTANCE::entityToLDto);
+    }
+
+    @Transactional(readOnly = true, rollbackFor = SQLException.class)
+    public Optional<BookDtoFlat> getByBookIdAndClientId(int bookId, int clientId) {
+        return this.iBookRepository
+                .findByBookIdAndRatingBooksEntityUserRatingBookIdRatingUserId(bookId, clientId).or(Optional::empty)
+                .map(IBookReadMapper.INSTANCE::toDto);
     }
 
     @Override
@@ -67,7 +85,7 @@ public class BookService implements IFirstService<BookDto> {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Integer id) {
         this.iBookRepository.deleteById(id);
     }
 }
