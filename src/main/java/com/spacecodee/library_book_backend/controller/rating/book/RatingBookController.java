@@ -1,7 +1,7 @@
 package com.spacecodee.library_book_backend.controller.rating.book;
 
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
-import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
 import com.spacecodee.library_book_backend.model.vo.rating.book.RatingBookKeyVo;
 import com.spacecodee.library_book_backend.model.vo.rating.book.RatingBookVo;
 import com.spacecodee.library_book_backend.service.rating.book.RatingBookServiceImpl;

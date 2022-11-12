@@ -1,4 +1,4 @@
-package com.spacecodee.library_book_backend.dto.jwt;
+package com.spacecodee.library_book_backend.model.dto.jwt;
 
 import lombok.*;
 

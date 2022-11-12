@@ -4,6 +4,7 @@ import com.spacecodee.library_book_backend.model.dto.book.ABookDto;
 import com.spacecodee.library_book_backend.model.vo.category.book.CategoryBookVo;
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -17,5 +18,6 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 public class BookVo extends ABookDto implements Serializable {
     private int id;
+    @NotNull(message = "{not.null.category.book}")
     private CategoryBookVo categoryBookVo;
 }

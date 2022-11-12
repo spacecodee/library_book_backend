@@ -4,8 +4,8 @@ import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdminOrU
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdminOrUserOrClient;
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
 import com.spacecodee.library_book_backend.core.controller.IRDController;
-import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
-import com.spacecodee.library_book_backend.dto.http.HttpResponseApiMsg;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.dto.user.client.UserClientDto;
 import com.spacecodee.library_book_backend.service.user.client.UserClientServiceImpl;
 import org.springframework.http.HttpStatus;

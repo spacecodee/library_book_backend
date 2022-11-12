@@ -1,6 +1,6 @@
 package com.spacecodee.library_book_backend.core.controller.core;
 
-import com.spacecodee.library_book_backend.dto.http.HttpResponseApiMsg;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
 import io.swagger.annotations.ApiImplicitParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

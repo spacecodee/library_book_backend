@@ -1,8 +1,8 @@
 package com.spacecodee.library_book_backend.controller.auth;
 
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
-import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
-import com.spacecodee.library_book_backend.dto.http.HttpResponseApiMsg;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.dto.jwt.JwtDto;
 import com.spacecodee.library_book_backend.dto.user.UserDto;
 import com.spacecodee.library_book_backend.dto.user.client.UserClientADto;

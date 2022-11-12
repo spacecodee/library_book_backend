@@ -1,7 +1,7 @@
 package com.spacecodee.library_book_backend.core.controller.core;
 
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsClient;
-import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

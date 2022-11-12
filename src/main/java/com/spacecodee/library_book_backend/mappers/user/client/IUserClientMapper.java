@@ -115,4 +115,10 @@ public interface IUserClientMapper {
                   .map(GrantedAuthority::getAuthority)
                   .collect(Collectors.toList());
     }
+
+    default UserClientEntity mapId(int id) {
+        final var entity = new UserClientEntity();
+        entity.setUserId(id);
+        return entity;
+    }
 }

@@ -1,7 +1,7 @@
 package com.spacecodee.library_book_backend.core.controller.core;
 
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdminOrUser;
-import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.http.ResponseEntity;

@@ -2,7 +2,7 @@ package com.spacecodee.library_book_backend.controller.role;
 
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdmin;
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
-import com.spacecodee.library_book_backend.dto.http.HttpResponseApiMsg;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.dto.role.UserRoleDto;
 import com.spacecodee.library_book_backend.service.role.RoleServiceImpl;
 import org.springframework.http.HttpStatus;

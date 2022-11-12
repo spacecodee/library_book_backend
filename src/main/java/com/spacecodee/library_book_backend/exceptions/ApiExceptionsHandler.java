@@ -1,7 +1,7 @@
 package com.spacecodee.library_book_backend.exceptions;
 
-import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
-import com.spacecodee.library_book_backend.dto.http.HttpResponseApiMsg;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,8 +1,8 @@
 package com.spacecodee.library_book_backend.controller.category.book;
 
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
-import com.spacecodee.library_book_backend.dto.http.HttpResponseApi;
-import com.spacecodee.library_book_backend.dto.http.HttpResponseApiMsg;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.model.dto.category.book.CategoryBookAndBookDto;
 import com.spacecodee.library_book_backend.model.dto.category.book.CategoryBookDto;
 import com.spacecodee.library_book_backend.model.vo.category.book.CategoryBookVo;
