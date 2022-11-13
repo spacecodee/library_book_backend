@@ -4,10 +4,9 @@ import com.spacecodee.library_book_backend.component.ExceptionShortComponent;
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotDeleteSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
+import com.spacecodee.library_book_backend.mappers.rating.book.IRatingBookKeyMapper;
 import com.spacecodee.library_book_backend.model.vo.rating.book.RatingBookKeyVo;
 import com.spacecodee.library_book_backend.model.vo.rating.book.RatingBookVo;
-import com.spacecodee.library_book_backend.service.book.BookServiceImpl;
-import com.spacecodee.library_book_backend.service.user.client.UserClientServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,33 +15,16 @@ import org.springframework.stereotype.Service;
 public class RatingBookServiceImpl {
 
     private final RatingBookService ratingBookService;
-    private final BookServiceImpl bookService;
-    private final UserClientServiceImpl userClientService;
 
     private final ExceptionShortComponent exceptionShortComponent;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RatingBookServiceImpl.class);
     private static final String GET_BY_ID_ERROR_RATING_BOOK = "get.by.id.error.rating.book";
 
-    public RatingBookServiceImpl(RatingBookService ratingBookService, BookServiceImpl bookService,
-                                 UserClientServiceImpl userClientService,
+    public RatingBookServiceImpl(RatingBookService ratingBookService,
                                  ExceptionShortComponent exceptionShortComponent) {
         this.ratingBookService = ratingBookService;
-        this.bookService = bookService;
-        this.userClientService = userClientService;
         this.exceptionShortComponent = exceptionShortComponent;
-    }
-
-    private float getPromedioByBookId(int bookId) {
-        return this.ratingBookService
-                .getPromedioByBookId(bookId)
-                .orElse(0F);
-    }
-
-    private float getRatingById(RatingBookKeyVo vo) {
-        return this.ratingBookService
-                .getRatingById(vo)
-                .orElse(0F);
     }
 
     private void noExistRating(String lang, RatingBookKeyVo dto) {
@@ -71,10 +53,11 @@ public class RatingBookServiceImpl {
         }
     }
 
-    public void delete(String lang, RatingBookKeyVo dto) {
-        this.noExistRating(lang, dto);
+    public void delete(String lang, int clientId, int bookId) {
+        var rating = IRatingBookKeyMapper.INSTANCE.toDto(clientId, bookId);
+        this.noExistRating(lang, rating);
         try {
-            this.ratingBookService.delete(dto);
+            this.ratingBookService.delete(rating);
         } catch (NotDeleteSqlException exception) {
             exception.printStackTrace(System.err);
             RatingBookServiceImpl.LOGGER.error("error deleting: {}", exception.getMessage());

@@ -5,6 +5,7 @@ import com.spacecodee.library_book_backend.enums.RolNameEnum;
 import com.spacecodee.library_book_backend.model.dto.role.RoleDto;
 import com.spacecodee.library_book_backend.utils.Utils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,39 +27,35 @@ public interface IUserRoleMapper {
     UserRoleEntity toEntity(RoleDto dto);
 
     @Mapping(target = "id", source = "userRoleId")
-    @Mapping(target = "name", source = "userRoleName")
+    @Mapping(target = "name", source = "userRoleName", qualifiedByName = "setRolesName")
     RoleDto toDto(UserRoleEntity roleDto);
 
-    default Set<RoleDto> mapRoles(Set<UserRoleEntity> roles) {
-        return roles.stream().map(this::toDto).collect(Collectors.toSet());
-    }
-
-    default Set<UserRoleEntity> mapEntityRoles(Set<RoleDto> roles) {
-        return roles.stream().map(this::toEntity).collect(Collectors.toSet());
-    }
-
-    @Mapping(source = "id", target = "userRoleId")
-    @Mapping(source = "name", target = "userRoleName", qualifiedByName = "setRoleName")
-    UserRoleEntity dtoToEntity(RoleDto dto);
-
-    @Mapping(source = "id", target = "userRoleId")
-    @Mapping(source = "name", target = "userRoleName", qualifiedByName = "setRolesName")
-    UserRoleEntity dtosToEntity(RoleDto dto);
-
-    @Named("setRoleName")
-    default RolNameEnum setRoleName(String name) {
-        return Utils.getROL_NAME_ENUMS()[2];
-    }
-
     @Named("setRolesName")
-    default RolNameEnum setRolesName(String name) {
-        for (int i = 0; i < Utils.getROLES_STRING().length; i++) {
-            if (name.contains(Utils.getROLES_STRING()[i])) {
-                return Utils.getROL_NAME_ENUMS()[i];
+    default String setRolesName(RolNameEnum userRoleName) {
+        for (int i = 0; i < Utils.getROL_NAME_ENUMS().length; i++) {
+            if (userRoleName.equals(Utils.getROL_NAME_ENUMS()[i])) {
+                return Utils.getROLES_STRING()[i];
             }
         }
 
-        return Utils.getROL_NAME_ENUMS()[1];
+        return Utils.getROLES_STRING()[1];
+    }
+
+    default Set<RoleDto> mapRoles(@NotNull Set<UserRoleEntity> roles) {
+        return roles.stream().map(this::toDto).collect(Collectors.toSet());
+    }
+
+    default Set<UserRoleEntity> mapEntityRoles(@NotNull Set<RoleDto> roles) {
+        return roles.stream().map(this::toEntity).collect(Collectors.toSet());
+    }
+
+    @Mapping(target = "userRoleId", source = "id")
+    @Mapping(target = "userRoleName", source = "name", qualifiedByName = "setRoleName")
+    UserRoleEntity dtoToEntity(RoleDto dto);
+
+    @Named("setRoleName")
+    default RolNameEnum setRoleName(@Nullable String name) {
+        return Utils.getROL_NAME_ENUMS()[2];
     }
 
     @InheritInverseConfiguration(name = "dtoToEntity")
@@ -72,17 +69,6 @@ public interface IUserRoleMapper {
     @Named("setRoleName")
     default String setRoleName(RolNameEnum userRoleName) {
         return Utils.getROLES_STRING()[2];
-    }
-
-    @Named("setRolesName")
-    default String setRolesName(RolNameEnum userRoleName) {
-        for (int i = 0; i < Utils.getROL_NAME_ENUMS().length; i++) {
-            if (userRoleName.equals(Utils.getROL_NAME_ENUMS()[i])) {
-                return Utils.getROLES_STRING()[i];
-            }
-        }
-
-        return Utils.getROLES_STRING()[1];
     }
 
     default RolNameEnum getRole(String name) {

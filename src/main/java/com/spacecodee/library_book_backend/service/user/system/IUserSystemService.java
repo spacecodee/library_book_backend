@@ -11,8 +11,10 @@ import java.util.Optional;
 
 public interface IUserSystemService {
 
+    @Transactional(readOnly = true, rollbackFor = SQLException.class)
     List<UserSystemDto> getAll();
 
+    @Transactional(readOnly = true, rollbackFor = SQLException.class)
     Optional<UserSystemDto> getById(int id);
 
     @Transactional(readOnly = true, rollbackFor = SQLException.class)

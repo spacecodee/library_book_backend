@@ -62,4 +62,13 @@ public class AuthController implements IAuthController {
         apiMsg.setHttpStatus(HttpStatus.OK);
         return new ResponseEntity<>(apiMsg, HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<HttpResponseApiMsg<JwtDto>> refresh(String lang, JwtDto jwtDto) {
+        HttpResponseApiMsg<JwtDto> apiMsg = new HttpResponseApiMsg<>();
+        apiMsg.setData(this.authService.refreshToken(lang, jwtDto));
+        apiMsg.setMessage(this.messageUtilComponent.getMessage("refresh.token.success", lang));
+        apiMsg.setHttpStatus(HttpStatus.OK);
+        return new ResponseEntity<>(apiMsg, HttpStatus.OK);
+    }
 }

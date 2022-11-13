@@ -2,14 +2,13 @@ package com.spacecodee.library_book_backend.controller.book;
 
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdmin;
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdminOrUser;
-import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsClient;
-import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
-import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotDeleteSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
 import com.spacecodee.library_book_backend.model.dto.book.BookAndCategoryDto;
 import com.spacecodee.library_book_backend.model.dto.book.ShowBookDto;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.model.vo.book.BookVo;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -46,7 +45,7 @@ public interface IBookController {
             @ApiImplicitParam(name = "lang", value = "Language", paramType = "query",
                     defaultValue = "en", dataTypeClass = String.class),
     })
-    @IsAuthenticatedAsClient
+    @IsAuthenticatedAsAdminOrUser
     @PostMapping("/add")
     ResponseEntity<HttpResponseApi> add(@RequestParam(defaultValue = "en") String lang,
                                         @Valid @RequestBody BookVo dto) throws NotAddSqlException;

@@ -1,10 +1,10 @@
 package com.spacecodee.library_book_backend.controller.category.book;
 
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
-import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
-import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.model.dto.category.book.CategoryBookAndBookDto;
 import com.spacecodee.library_book_backend.model.dto.category.book.CategoryBookDto;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.model.vo.category.book.CategoryBookVo;
 import com.spacecodee.library_book_backend.service.category.book.CategoryBookServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -74,8 +74,8 @@ public class CategoryBookController implements ICategoryBookController {
     }
 
     @Override
-    public ResponseEntity<HttpResponseApiMsg<CategoryBookAndBookDto>> getByIdCategoryBook(String lang, int categoryId) {
-        this.categoryAndBookResponse.setData(this.categoryBookService.getByIdCategoryBook(lang, categoryId));
+    public ResponseEntity<HttpResponseApiMsg<CategoryBookAndBookDto>> getByIdCategoryBook(String lang, int id) {
+        this.categoryAndBookResponse.setData(this.categoryBookService.getByIdCategoryBook(lang, id));
         this.categoryAndBookResponse.setMessage(
                 this.messageUtilComponent.getMessage("get.by.id.success.category.book", lang));
         this.categoryAndBookResponse.setHttpStatus(HttpStatus.OK);

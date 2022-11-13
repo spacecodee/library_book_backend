@@ -2,7 +2,6 @@ package com.spacecodee.library_book_backend.controller.rating.book;
 
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
 import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
-import com.spacecodee.library_book_backend.model.vo.rating.book.RatingBookKeyVo;
 import com.spacecodee.library_book_backend.model.vo.rating.book.RatingBookVo;
 import com.spacecodee.library_book_backend.service.rating.book.RatingBookServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -45,10 +44,9 @@ public class RatingBookController implements IRatingBookController {
     }
 
     @Override
-    public ResponseEntity<HttpResponseApi> delete(String lang, int bookId, int clientId) {
+    public ResponseEntity<HttpResponseApi> delete(String lang, int clientId, int bookId) {
         HttpResponseApi httpResponseApiMsg = new HttpResponseApi();
-
-        this.ratingBookService.delete(lang, new RatingBookKeyVo(clientId, bookId));
+        this.ratingBookService.delete(lang, clientId, bookId);
         httpResponseApiMsg.setMessage(this.messageUtilComponent.getMessage("delete.success.rating.book", lang));
         httpResponseApiMsg.setHttpStatus(HttpStatus.OK);
 

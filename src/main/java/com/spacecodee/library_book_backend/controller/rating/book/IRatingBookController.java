@@ -1,6 +1,6 @@
 package com.spacecodee.library_book_backend.controller.rating.book;
 
-import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdmin;
+import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdminOrUserOrClient;
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsClient;
 import com.spacecodee.library_book_backend.exceptions.NotDeleteSqlException;
 import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
@@ -31,9 +31,9 @@ public interface IRatingBookController {
 
     @ApiImplicitParam(name = "lang", value = "Language", paramType = "query", defaultValue = "en",
             dataTypeClass = String.class)
-    @IsAuthenticatedAsAdmin
+    @IsAuthenticatedAsAdminOrUserOrClient
     @DeleteMapping("/delete/{bookId}")
     ResponseEntity<HttpResponseApi> delete(@RequestParam(defaultValue = "en") String lang,
-                                           @PathVariable int bookId, @RequestParam int clientId)
+                                           @RequestParam int clientId, @PathVariable int bookId)
             throws NotDeleteSqlException;
 }

@@ -2,7 +2,6 @@ package com.spacecodee.library_book_backend.controller.category.book;
 
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdmin;
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdminOrUser;
-import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsClient;
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotDeleteSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
@@ -53,7 +52,7 @@ public interface ICategoryBookController {
             @ApiImplicitParam(name = "lang", value = "Language", paramType = "query",
                     defaultValue = "en", dataTypeClass = String.class),
     })
-    @IsAuthenticatedAsClient
+    @IsAuthenticatedAsAdminOrUser
     @PostMapping("/add")
     ResponseEntity<HttpResponseApi> add(@RequestParam(defaultValue = "en") String lang,
                                         @Valid @RequestBody CategoryBookVo dto) throws NotAddSqlException;

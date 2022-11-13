@@ -14,12 +14,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+
 @Service
 public class AuthServiceImpl {
 
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
-
     private final ExceptionShortComponent exceptionShortComponent;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
@@ -43,6 +44,17 @@ public class AuthServiceImpl {
         } catch (LoginAuthException exception) {
             AuthServiceImpl.LOGGER.error("error login: {}", exception.getMessage());
             throw this.exceptionShortComponent.loginAuth("login.error.user", lang);
+        }
+    }
+
+    public JwtDto refreshToken(String lang, JwtDto token) {
+        String jwt;
+        try {
+            jwt = this.jwtProvider.refreshToken(token);
+            return new JwtDto(jwt);
+        } catch (ParseException e) {
+            AuthServiceImpl.LOGGER.error("error refresh token: {}", e.getMessage());
+            throw this.exceptionShortComponent.loginAuth("refresh.token.error", lang);
         }
     }
 

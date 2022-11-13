@@ -44,7 +44,8 @@ public class RatingBookService implements IRatingBookService {
         this.iRatingBookRepository.save(IRatingBookMapper.INSTANCE.toEntity(dto));
     }
 
-    @Override public void delete(RatingBookKeyVo dto) {
+    @Override
+    public void delete(RatingBookKeyVo dto) {
         this.iRatingBookRepository.deleteById(IRatingBookKeyMapper.INSTANCE.toEntity(dto));
     }
 }
