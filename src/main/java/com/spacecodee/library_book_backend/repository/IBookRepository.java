@@ -9,8 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface IBookRepository extends JpaRepository<BookEntity, Integer> {
-    Optional<BookAndCategoryAndRatingsEntityInfo> findByBookIdAndRatingBooksEntityUserRatingBookIdRatingUserId(
-            int bookId, int ratingUserId);
+    Optional<BookAndCategoryAndRatingsEntityInfo> findByBookId(int bookId);
 
     boolean existsByBookName(String name);
 }

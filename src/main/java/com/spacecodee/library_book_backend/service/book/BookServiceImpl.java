@@ -53,11 +53,13 @@ public class BookServiceImpl {
     public ShowBookDto getByBookAndClientId(String lang, int bookId, int clientId) {
         var rating = this.ratingBookService
                 .getRatingById(IRatingBookKeyMapper.INSTANCE.toDto(bookId, clientId)).orElse(0F);
+        var globalRating = this.ratingBookService.getPromedioByBookId(bookId).orElse(0F);
         var dto = this.bookService
-                .getByBookAndClientId(bookId, clientId)
+                .getByBookAndClientId(bookId)
                 .orElseThrow(() -> this.exceptionShortComponent
                         .notFound(GET_BY_ID_ERROR_BOOK, lang));
         dto.setRating(rating);
+        dto.setGlobalRating(globalRating);
         return dto;
     }
 
@@ -86,7 +88,7 @@ public class BookServiceImpl {
         }
     }
 
-    public void update(String lang, BookVo vo) {
+    public void update(String lang, @NotNull BookVo vo) {
         this.noExistById(lang, vo.getId());
         var category = this.categoryBookService.getById(lang, vo.getCategoryBookVo().getId());
         vo.setCategoryBookVo(category);

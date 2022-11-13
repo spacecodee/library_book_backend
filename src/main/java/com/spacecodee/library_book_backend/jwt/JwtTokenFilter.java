@@ -64,7 +64,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         UserDetails userDetails;
 
         userDetails = this.userDetailsService.loadUserByUsername(username);
-        if (userDetails.getAuthorities().isEmpty()) {
+        if (userDetails.getAuthorities() == null) {
             userDetails = this.userClientService.loadUserByUsername(username);
         }
 

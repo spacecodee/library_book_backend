@@ -74,11 +74,11 @@ public interface IUserSystemReadMapper {
     }
 
     @Named("authorities")
-    default Collection<? extends GrantedAuthority> setAuthorities(Set<UserRoleEntity> role) {
+    default Collection<GrantedAuthority> setAuthorities(Set<UserRoleEntity> role) {
         return IUserRoleMapper.INSTANCE.mapAuthorities(role);
     }
 
-    default List<String> getUserSystemRoles(PUserSystemDto dto) {
+    default List<String> getUserSystemRoles(@NotNull PUserSystemDto dto) {
         return dto.getAuthorities()
                   .stream()
                   .map(GrantedAuthority::getAuthority)

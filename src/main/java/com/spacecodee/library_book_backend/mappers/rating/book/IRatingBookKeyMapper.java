@@ -25,4 +25,10 @@ public interface IRatingBookKeyMapper {
     default RatingBookKeyVo toDto(int clientId, int bookId) {
         return new RatingBookKeyVo(clientId, bookId);
     }
+
+    @Mapping(target = "ratingUserId", source = "clientId")
+    @Mapping(target = "ratingBookId", source = "bookId")
+    default UserRatingBookKeyEntity toEntity(int clientId, int bookId) {
+        return new UserRatingBookKeyEntity(clientId, bookId);
+    }
 }

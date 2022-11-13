@@ -20,7 +20,7 @@ public interface IBookService extends IExistByService {
 
     //to clients
     @Transactional(readOnly = true, rollbackFor = SQLException.class)
-    Optional<ShowBookDto> getByBookAndClientId(int bookId, int clientId);
+    Optional<ShowBookDto> getByBookAndClientId(int bookId);
 
     @Override
     boolean existById(int id);

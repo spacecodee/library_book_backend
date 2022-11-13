@@ -95,9 +95,18 @@ public class ApplicationSecurityConfig {
         return this.authenticationConfiguration.getAuthenticationManager();
     }
 
+    /**
+     * AuthenticationManagerBuilder is used to create an AuthenticationManager instance which is
+     *
+     * @param builder AuthenticationManagerBuilder
+     * @throws Exception Exception
+     * @apiNote in this case we are using two different authentication, one for the system user and one for the client user
+     * so if you have implemented an exception in one of the two authentication, remember put the first class that
+     * doesn't have this exception, if you don't do this, authentication will not work
+     */
     @Autowired
     public void configure(@NotNull AuthenticationManagerBuilder builder) throws Exception {
-        builder.userDetailsService(this.userClientService).passwordEncoder(new BCryptPasswordEncoder());
         builder.userDetailsService(this.userSystemService).passwordEncoder(new BCryptPasswordEncoder());
+        builder.userDetailsService(this.userClientService).passwordEncoder(new BCryptPasswordEncoder());
     }
 }

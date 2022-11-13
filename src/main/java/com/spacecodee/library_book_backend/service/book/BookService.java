@@ -33,9 +33,9 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public Optional<ShowBookDto> getByBookAndClientId(int bookId, int clientId) {
+    public Optional<ShowBookDto> getByBookAndClientId(int bookId) {
         return this.iBookRepository
-                .findByBookIdAndRatingBooksEntityUserRatingBookIdRatingUserId(bookId, clientId)
+                .findByBookId(bookId)
                 .map(IBookReadMapper.INSTANCE::toDto)
                 .or(Optional::empty);
     }
