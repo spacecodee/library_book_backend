@@ -1,8 +1,11 @@
 package com.spacecodee.library_book_backend.mappers.people;
 
-import com.spacecodee.library_book_backend.dto.people.PeopleDto;
 import com.spacecodee.library_book_backend.entity.PeopleEntity;
-import org.mapstruct.*;
+import com.spacecodee.library_book_backend.model.dto.people.PeopleDto;
+import org.mapstruct.InheritInverseConfiguration;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -15,12 +18,8 @@ public interface IPeopleMapper {
     @Mapping(source = "surname", target = "peopleSurname")
     @Mapping(source = "phone", target = "peoplePhone")
     @Mapping(source = "address", target = "peopleAddress")
-    PeopleEntity dtoToEntity(PeopleDto dto);
+    PeopleEntity toEntity(PeopleDto dto);
 
-    @InheritInverseConfiguration(name = "dtoToEntity")
-    PeopleDto entityToDto(PeopleEntity entity);
-
-    @InheritInverseConfiguration(name = "entityToDto")
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    PeopleEntity updateEntityFromDto(PeopleDto dto, @MappingTarget PeopleEntity entity);
+    @InheritInverseConfiguration(name = "toEntity")
+    PeopleDto toDto(PeopleEntity entity);
 }

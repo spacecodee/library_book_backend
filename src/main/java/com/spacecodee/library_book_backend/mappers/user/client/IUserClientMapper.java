@@ -1,18 +1,17 @@
 package com.spacecodee.library_book_backend.mappers.user.client;
 
-import com.spacecodee.library_book_backend.dto.user.client.PUserClientDto;
-import com.spacecodee.library_book_backend.dto.user.client.UserClientADto;
-import com.spacecodee.library_book_backend.dto.user.client.UserClientDto;
-import com.spacecodee.library_book_backend.dto.user.client.UserClientUDto;
+import com.spacecodee.library_book_backend.entity.PeopleEntity;
 import com.spacecodee.library_book_backend.entity.UserClientEntity;
+import com.spacecodee.library_book_backend.entity.UserRoleEntity;
 import com.spacecodee.library_book_backend.mappers.people.IPeopleMapper;
-import com.spacecodee.library_book_backend.mappers.role.IUserRoleMapper;
+import com.spacecodee.library_book_backend.model.dto.people.PeopleDto;
+import com.spacecodee.library_book_backend.model.dto.user.client.PUserClientDto;
+import com.spacecodee.library_book_backend.model.vo.user.client.UserClientVo;
+import org.jetbrains.annotations.NotNull;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,13 +20,53 @@ public interface IUserClientMapper {
 
     IUserClientMapper INSTANCE = Mappers.getMapper(IUserClientMapper.class);
 
+    @Mapping(target = "id", source = "userId")
+    @Mapping(target = "email", source = "userEmail")
+    @Mapping(target = "username", source = "username")
+    @Mapping(target = "password", source = "userPassword")
+    @Mapping(target = "peopleDto", source = "peopleEntity", qualifiedByName = "peopleDto")
+    UserClientVo toVo(UserClientEntity entity);
+
+    @Named("peopleDto")
+    default PeopleDto mapPeopleDto(@NotNull PeopleEntity peopleEntity) {
+        return IPeopleMapper.INSTANCE.toDto(peopleEntity);
+    }
+
+    @Named("peopleEntity")
+    default PeopleEntity setPeopleEntity(@NotNull PeopleDto dto) {
+        return IPeopleMapper.INSTANCE.toEntity(dto);
+    }
+
+    @InheritInverseConfiguration(name = "toVo")
+    @Mapping(target = "peopleEntity", source = "peopleDto", ignore = true)
+    @Mapping(target = "userRolEntity", ignore = true)
+    UserClientEntity toEntity(UserClientVo vo);
+
+    default void updateClientRoles(@NotNull UserClientEntity userClient, UserRoleEntity role) {
+        userClient.setUserRolEntity(role);
+    }
+
+    default UserClientEntity mapId(int id) {
+        final var entity = new UserClientEntity();
+        entity.setUserId(id);
+        return entity;
+    }
+
+    default List<String> getUserClientRoles(@NotNull PUserClientDto dto) {
+        return dto.getAuthorities()
+                  .stream()
+                  .map(GrantedAuthority::getAuthority)
+                  .collect(Collectors.toList());
+    }
+
+    /*
     @Mapping(source = "id", target = "userId")
     @Mapping(source = "username", target = "username")
     @Mapping(source = "email", target = "userEmail")
     @Mapping(source = "password", target = "userPassword")
     @Mapping(target = "userRolEntity", ignore = true)
     @Mapping(target = "peopleEntity", ignore = true)
-    UserClientEntity dtoToEntity(UserClientDto dto);
+    UserClientEntity toEntity(UserClientDto dto);
 
     @AfterMapping
     default void setPeopleEntity(@MappingTarget UserClientEntity entity, UserClientDto userClientDto) {
@@ -44,7 +83,7 @@ public interface IUserClientMapper {
     }
 
     @InheritInverseConfiguration(name = "dtoToEntity")
-    UserClientDto entityToDto(UserClientEntity entity);
+    UserClientDto toDto(UserClientEntity entity);
 
 
     @AfterMapping
@@ -61,11 +100,6 @@ public interface IUserClientMapper {
         }
     }
 
-
-    @InheritInverseConfiguration(name = "entityToDto")
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    UserClientEntity updateEntityFromDto(UserClientDto dto, @MappingTarget UserClientEntity entity);
-
     //client a
     @Mapping(source = "email", target = "email")
     @Mapping(source = "username", target = "username")
@@ -74,15 +108,6 @@ public interface IUserClientMapper {
     @Mapping(target = "userRolDto", ignore = true)
     @Mapping(target = "id", ignore = true)
     UserClientDto aDtoToDto(UserClientADto dto);
-
-    //client u
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "email", target = "email")
-    @Mapping(source = "username", target = "username")
-    @Mapping(source = "password", target = "password")
-    @Mapping(source = "peopleDto", target = "peopleDto")
-    @Mapping(target = "userRolDto", ignore = true)
-    UserClientDto uDtoToDto(UserClientUDto dto);
 
     //principal user
     @Mapping(target = "username", source = "username")
@@ -116,9 +141,5 @@ public interface IUserClientMapper {
                   .collect(Collectors.toList());
     }
 
-    default UserClientEntity mapId(int id) {
-        final var entity = new UserClientEntity();
-        entity.setUserId(id);
-        return entity;
-    }
+    */
 }

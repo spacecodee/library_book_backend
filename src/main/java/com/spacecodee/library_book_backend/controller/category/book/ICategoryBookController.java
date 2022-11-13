@@ -3,13 +3,13 @@ package com.spacecodee.library_book_backend.controller.category.book;
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdmin;
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdminOrUser;
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsClient;
-import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
-import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotDeleteSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
 import com.spacecodee.library_book_backend.model.dto.category.book.CategoryBookAndBookDto;
 import com.spacecodee.library_book_backend.model.dto.category.book.CategoryBookDto;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.model.vo.category.book.CategoryBookVo;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@RequestMapping("default")
 public interface ICategoryBookController {
 
     //dto for user into system

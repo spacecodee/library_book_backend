@@ -1,25 +1,26 @@
 package com.spacecodee.library_book_backend.service.user.system;
 
 import com.spacecodee.library_book_backend.component.ExceptionShortComponent;
-import com.spacecodee.library_book_backend.dto.role.UserRoleDto;
-import com.spacecodee.library_book_backend.dto.user.system.UserSystemDto;
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
-import com.spacecodee.library_book_backend.service.role.RoleServiceImpl;
+import com.spacecodee.library_book_backend.mappers.user.system.IUserSystemReadMapper;
+import com.spacecodee.library_book_backend.model.dto.user.system.PUserSystemDto;
+import com.spacecodee.library_book_backend.model.dto.user.system.UserSystemDto;
+import com.spacecodee.library_book_backend.model.vo.user.system.UserSystemVo;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
-public class UserSystemServiceImpl {
+public class UserSystemServiceImpl implements UserDetailsService {
 
-    private final RoleServiceImpl roleService;
     private final UserSystemService userSystemService;
     private final ExceptionShortComponent exceptionShortComponent;
     private final PasswordEncoder passwordEncoder;
@@ -27,12 +28,17 @@ public class UserSystemServiceImpl {
     private static final String GET_BY_ID_ERROR_USER_CLIENT = "get.by.id.error.user.system";
     private static final Logger LOGGER = LoggerFactory.getLogger(UserSystemServiceImpl.class);
 
-    public UserSystemServiceImpl(RoleServiceImpl roleService, UserSystemService userSystemService,
+    public UserSystemServiceImpl(UserSystemService userSystemService,
                                  ExceptionShortComponent exceptionShortComponent, PasswordEncoder passwordEncoder) {
-        this.roleService = roleService;
         this.userSystemService = userSystemService;
         this.exceptionShortComponent = exceptionShortComponent;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        var user = this.getByUsername("eng", username);
+        return PUserSystemDto.build(IUserSystemReadMapper.INSTANCE.toEntity(user));
     }
 
     public List<UserSystemDto> getAll() {
@@ -46,47 +52,46 @@ public class UserSystemServiceImpl {
                         UserSystemServiceImpl.GET_BY_ID_ERROR_USER_CLIENT, lang));
     }
 
-    public UserSystemDto getByName(String lang, String name) {
+    public UserSystemDto getByUsername(String lang, String name) {
         return this.userSystemService
-                .getByName(name)
+                .getByUsername(name)
                 .orElseThrow(() -> this.exceptionShortComponent.notFound("get.by.user.name.error.user.system", lang));
     }
 
-    public void existById(String lang, int id) {
+    private void existById(String lang, int id) {
         if (this.userSystemService.existById(id)) {
             throw this.exceptionShortComponent.existFound("get.by.id.exists.user.system", lang);
         }
     }
 
-    public void noExistById(String lang, int id) {
+    private void noExistById(String lang, int id) {
         if (!this.userSystemService.existById(id)) {
             throw this.exceptionShortComponent.notFound(UserSystemServiceImpl.GET_BY_ID_ERROR_USER_CLIENT, lang);
         }
     }
 
-    public void existByUsername(String lang, String name) {
-        if (this.userSystemService.existByName(name)) {
+    private void existByUsername(String lang, String name) {
+        if (this.userSystemService.existByUsername(name)) {
             throw this.exceptionShortComponent.existFound("get.by.name.exists.user.system", lang);
         }
     }
 
-    public void existByPhone(String lang, int phone) {
+    private void existByPhone(String lang, int phone) {
         if (this.userSystemService.existByPhone(phone)) {
             throw this.exceptionShortComponent.existFound("get.by.phone.exists.people", lang);
         }
     }
 
-    public void existByEmail(String lang, String email) {
+    private void existByEmail(String lang, String email) {
         if (this.userSystemService.existByEmail(email)) {
             throw this.exceptionShortComponent.existFound("get.by.email.exists.people", lang);
         }
     }
 
-    public void add(String lang, UserSystemDto dto) {
-        this.setRolesToDto(lang, dto);
+    public void add(String lang, @NotNull UserSystemVo dto) {
+        this.existByPhone(lang, dto.getPeopleDto().getPhone());
         this.existByEmail(lang, dto.getEmail());
         this.existByUsername(lang, dto.getUsername());
-        this.existByPhone(lang, dto.getPeopleDto().getPhone());
         try {
             dto.setPassword(this.passwordEncoder.encode(dto.getPassword()));
             this.userSystemService.add(dto);
@@ -96,11 +101,10 @@ public class UserSystemServiceImpl {
         }
     }
 
-    public void update(String lang, UserSystemDto dto) {
-        this.setRolesToDto(lang, dto);
+    public void update(String lang, UserSystemVo dto) {
         this.noExistById(lang, dto.getId());
 
-        List<UserSystemDto> users = this.userSystemService.getAll();
+        final var users = this.userSystemService.getAll();
 
         try {
             users.forEach(userDto -> {
@@ -127,25 +131,6 @@ public class UserSystemServiceImpl {
             UserSystemServiceImpl.LOGGER.error("error updating: {}", e.getMessage());
             throw this.exceptionShortComponent.noUpdateSql("update.error.user.system", lang);
         }
-    }
-
-    private void setRolesToDto(String lang, UserSystemDto dto) {
-        final AtomicBoolean containsAdmin = new AtomicBoolean(false);
-        final Set<UserRoleDto> roles = new HashSet<>();
-        dto.getUserRolesDto().forEach(userRoleDto -> {
-            if (userRoleDto.getName().contains("admin")) {
-                containsAdmin.set(true);
-            }
-        });
-
-        if (containsAdmin.get()) {
-            UserRoleDto roleAdmin = this.roleService.findByName(lang, "admin");
-            roles.add(roleAdmin);
-        }
-        UserRoleDto roleUser = this.roleService.findByName(lang, "user");
-        roles.add(roleUser);
-
-        dto.setUserRolesDto(roles);
     }
 
     public void delete(String lang, int id) {

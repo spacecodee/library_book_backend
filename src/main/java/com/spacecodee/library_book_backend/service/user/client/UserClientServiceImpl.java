@@ -1,23 +1,26 @@
 package com.spacecodee.library_book_backend.service.user.client;
 
 import com.spacecodee.library_book_backend.component.ExceptionShortComponent;
-import com.spacecodee.library_book_backend.dto.user.client.UserClientADto;
-import com.spacecodee.library_book_backend.dto.user.client.UserClientDto;
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
-import com.spacecodee.library_book_backend.mappers.user.client.IUserClientMapper;
-import com.spacecodee.library_book_backend.service.role.RoleServiceImpl;
+import com.spacecodee.library_book_backend.mappers.user.client.IUserClientReadMapper;
+import com.spacecodee.library_book_backend.model.dto.user.client.PUserClientDto;
+import com.spacecodee.library_book_backend.model.dto.user.client.UserClientDto;
+import com.spacecodee.library_book_backend.model.vo.user.client.UserClientVo;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UserClientServiceImpl {
+public class UserClientServiceImpl implements UserDetailsService {
 
-    private final RoleServiceImpl roleService;
     private final UserClientService userClientService;
     private final ExceptionShortComponent exceptionShortComponent;
     private final PasswordEncoder passwordEncoder;
@@ -25,12 +28,17 @@ public class UserClientServiceImpl {
     private static final String GET_BY_ID_ERROR_USER_CLIENT = "get.by.id.error.user.client";
     private static final Logger LOGGER = LoggerFactory.getLogger(UserClientServiceImpl.class);
 
-    public UserClientServiceImpl(RoleServiceImpl roleService, UserClientService userClientService,
+    public UserClientServiceImpl(UserClientService userClientService,
                                  ExceptionShortComponent exceptionShortComponent, PasswordEncoder passwordEncoder) {
-        this.roleService = roleService;
         this.userClientService = userClientService;
         this.exceptionShortComponent = exceptionShortComponent;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        var user = this.getByUsername(username);
+        return PUserClientDto.build(IUserClientReadMapper.INSTANCE.toEntity(user));
     }
 
     public List<UserClientDto> getAll() {
@@ -44,10 +52,10 @@ public class UserClientServiceImpl {
                         UserClientServiceImpl.GET_BY_ID_ERROR_USER_CLIENT, lang));
     }
 
-    public UserClientDto getByName(String lang, String name) {
+    public UserClientDto getByUsername(String name) {
         return this.userClientService
-                .getByName(name)
-                .orElseThrow(() -> this.exceptionShortComponent.notFound("get.by.user.name.error.user.client", lang));
+                .getByUsername(name)
+                .orElse(new UserClientDto());
     }
 
     public void existById(String lang, int id) {
@@ -63,7 +71,7 @@ public class UserClientServiceImpl {
     }
 
     public void existByUsername(String lang, String name) {
-        if (this.userClientService.existByName(name)) {
+        if (this.userClientService.existByUsername(name)) {
             throw this.exceptionShortComponent.existFound("get.by.name.exists.user.client", lang);
         }
     }
@@ -80,26 +88,23 @@ public class UserClientServiceImpl {
         }
     }
 
-    public void add(String lang, UserClientADto dto) {
-        UserClientDto clientDto = IUserClientMapper.INSTANCE.aDtoToDto(dto);
-        clientDto.setUserRolDto(this.roleService.findByName(lang, "student"));
+    public void add(String lang, @NotNull UserClientVo dto) {
+        this.existByPhone(lang, dto.getPeopleDto().getPhone());
         this.existByEmail(lang, dto.getEmail());
         this.existByUsername(lang, dto.getUsername());
-        this.existByPhone(lang, dto.getPeopleDto().getPhone());
         try {
-            clientDto.setPassword(this.passwordEncoder.encode(clientDto.getPassword()));
-            this.userClientService.add(clientDto);
+            dto.setPassword(this.passwordEncoder.encode(dto.getPassword()));
+            this.userClientService.add(dto);
         } catch (NotAddSqlException e) {
             UserClientServiceImpl.LOGGER.error("error adding: {}", e.getMessage());
             throw this.exceptionShortComponent.notAddSql("add.error.user.client", lang);
         }
     }
 
-    public void update(String lang, UserClientDto dto) {
-        dto.setUserRolDto(this.roleService.findByName(lang, "student"));
+    public void update(String lang, @NotNull UserClientVo dto) {
         this.noExistById(lang, dto.getId());
 
-        List<UserClientDto> users = this.userClientService.getAll();
+        final var users = this.userClientService.getAll();
 
         try {
             users.forEach(userDto -> {

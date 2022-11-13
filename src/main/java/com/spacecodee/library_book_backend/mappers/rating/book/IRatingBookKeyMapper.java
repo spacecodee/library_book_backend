@@ -2,7 +2,10 @@ package com.spacecodee.library_book_backend.mappers.rating.book;
 
 import com.spacecodee.library_book_backend.entity.rating.UserRatingBookKeyEntity;
 import com.spacecodee.library_book_backend.model.vo.rating.book.RatingBookKeyVo;
-import org.mapstruct.*;
+import org.mapstruct.InheritInverseConfiguration;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -22,9 +25,4 @@ public interface IRatingBookKeyMapper {
     default RatingBookKeyVo toDto(int clientId, int bookId) {
         return new RatingBookKeyVo(clientId, bookId);
     }
-
-    @InheritInverseConfiguration(name = "toDto")
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    UserRatingBookKeyEntity updateEntityFromDto(RatingBookKeyVo dto,
-                                                @MappingTarget UserRatingBookKeyEntity entity);
 }

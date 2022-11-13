@@ -1,16 +1,15 @@
-package com.spacecodee.library_book_backend.dto.user;
+package com.spacecodee.library_book_backend.model.pojo;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-@ToString
-public class UserDto {
-
+@Getter
+@Setter
+public class AuthUserPojo {
     @NotEmpty(message = "{is.required.username}")
     private String username;
     @NotEmpty(message = "{is.required.password}")

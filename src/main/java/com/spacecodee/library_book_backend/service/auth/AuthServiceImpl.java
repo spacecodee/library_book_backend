@@ -1,10 +1,10 @@
 package com.spacecodee.library_book_backend.service.auth;
 
 import com.spacecodee.library_book_backend.component.ExceptionShortComponent;
-import com.spacecodee.library_book_backend.dto.jwt.JwtDto;
-import com.spacecodee.library_book_backend.dto.user.UserDto;
 import com.spacecodee.library_book_backend.exceptions.LoginAuthException;
 import com.spacecodee.library_book_backend.jwt.JwtProvider;
+import com.spacecodee.library_book_backend.model.dto.jwt.JwtDto;
+import com.spacecodee.library_book_backend.model.pojo.AuthUserPojo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,7 +31,7 @@ public class AuthServiceImpl {
         this.exceptionShortComponent = exceptionShortComponent;
     }
 
-    public JwtDto login(String lang, UserDto dto) {
+    public JwtDto login(String lang, AuthUserPojo dto) {
         String jwt;
         try {
             Authentication authentication = this.getAuthentication(dto);
@@ -45,7 +45,7 @@ public class AuthServiceImpl {
         }
     }
 
-    private Authentication getAuthentication(UserDto dto) {
+    private Authentication getAuthentication(AuthUserPojo dto) {
         return this.authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         dto.getUsername(),

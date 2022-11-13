@@ -2,8 +2,8 @@ package com.spacecodee.library_book_backend.security;
 
 import com.spacecodee.library_book_backend.jwt.JwtEntryPoint;
 import com.spacecodee.library_book_backend.jwt.JwtTokenFilter;
-import com.spacecodee.library_book_backend.service.user.client.PUserClientServiceImpl;
-import com.spacecodee.library_book_backend.service.user.system.PUserSystemServiceImpl;
+import com.spacecodee.library_book_backend.service.user.client.UserClientServiceImpl;
+import com.spacecodee.library_book_backend.service.user.system.UserSystemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,12 +25,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig {
 
-    private final PUserSystemServiceImpl userSystemService;
-    private final PUserClientServiceImpl userClientService;
+    private final UserSystemServiceImpl userSystemService;
+    private final UserClientServiceImpl userClientService;
     private final JwtEntryPoint jwtEntryPoint;
     private final AuthenticationConfiguration authenticationConfiguration;
 
-    public ApplicationSecurityConfig(PUserSystemServiceImpl userSystemService, PUserClientServiceImpl userClientService,
+    public ApplicationSecurityConfig(UserSystemServiceImpl userSystemService, UserClientServiceImpl userClientService,
                                      JwtEntryPoint jwtEntryPoint,
                                      AuthenticationConfiguration authenticationConfiguration) {
         this.userSystemService = userSystemService;
@@ -59,7 +59,10 @@ public class ApplicationSecurityConfig {
                             "/v1/book/get-all",
                             "/v1/book/get-by/{id}",
                             "/v1/book/find-by/{bookId}",
-                            "/v1/category-book/**",
+                            "/v1/category-book/get-all",
+                            "/v1/category-book/get-by/{id}",
+                            "/v1/category-book/find-all",
+                            "/v1/category-book/find-by/{id}",
                             "/v1/rating-book/list"
                     ).permitAll()
                     .anyRequest()
@@ -92,7 +95,7 @@ public class ApplicationSecurityConfig {
 
     @Autowired
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.userDetailsService(this.userSystemService).passwordEncoder(new BCryptPasswordEncoder());
         builder.userDetailsService(this.userClientService).passwordEncoder(new BCryptPasswordEncoder());
+        builder.userDetailsService(this.userSystemService).passwordEncoder(new BCryptPasswordEncoder());
     }
 }

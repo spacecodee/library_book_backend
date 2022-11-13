@@ -1,51 +1,48 @@
 package com.spacecodee.library_book_backend.service.user.system;
 
-import com.spacecodee.library_book_backend.dto.user.system.UserSystemDto;
-import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
+import com.spacecodee.library_book_backend.entity.UserRoleEntity;
+import com.spacecodee.library_book_backend.entity.UserSystemEntity;
+import com.spacecodee.library_book_backend.enums.RolNameEnum;
 import com.spacecodee.library_book_backend.mappers.user.system.IUserSystemMapper;
+import com.spacecodee.library_book_backend.mappers.user.system.IUserSystemReadMapper;
+import com.spacecodee.library_book_backend.model.dto.user.system.UserSystemDto;
+import com.spacecodee.library_book_backend.model.vo.user.system.UserSystemVo;
+import com.spacecodee.library_book_backend.repository.IUserRoleRepository;
 import com.spacecodee.library_book_backend.repository.IUserSystemRepository;
-import com.spacecodee.library_book_backend.service.generics.IFirstService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserSystemService implements IFirstService<UserSystemDto> {
+public class UserSystemService implements IUserSystemService {
 
     private final IUserSystemRepository iUserSystemRepository;
+    private final IUserRoleRepository iUserRoleRepository;
 
-    public UserSystemService(IUserSystemRepository iUserSystemRepository) {
+    public UserSystemService(IUserSystemRepository iUserSystemRepository, IUserRoleRepository iUserRoleRepository) {
         this.iUserSystemRepository = iUserSystemRepository;
+        this.iUserRoleRepository = iUserRoleRepository;
     }
 
-    @Transactional(readOnly = true, rollbackFor = SQLException.class)
     @Override
     public List<UserSystemDto> getAll() {
-        final List<UserSystemDto> list = new ArrayList<>();
-        this.iUserSystemRepository.findAll().forEach(entity -> list.add(
-                IUserSystemMapper.INSTANCE.entityToDto(entity)));
-
-        return list;
+        return IUserSystemReadMapper.INSTANCE.mapClients(iUserSystemRepository.findAll());
     }
 
-    @Transactional(readOnly = true, rollbackFor = SQLException.class)
     @Override
     public Optional<UserSystemDto> getById(int id) {
         return this.iUserSystemRepository
                 .findById(id).or(Optional::empty)
-                .map(IUserSystemMapper.INSTANCE::entityToDto);
+                .map(IUserSystemReadMapper.INSTANCE::toDto);
     }
 
-    @Transactional(readOnly = true, rollbackFor = SQLException.class)
     @Override
-    public Optional<UserSystemDto> getByName(String name) {
+    public Optional<UserSystemDto> getByUsername(String username) {
         return this.iUserSystemRepository
-                .findByUserSystemUsername(name).or(Optional::empty)
-                .map(IUserSystemMapper.INSTANCE::entityToDto);
+                .findByUserSystemUsername(username).or(Optional::empty)
+                .map(IUserSystemReadMapper.INSTANCE::toDto);
     }
 
     @Override
@@ -54,7 +51,7 @@ public class UserSystemService implements IFirstService<UserSystemDto> {
     }
 
     @Override
-    public boolean existByName(String name) {
+    public boolean existByUsername(String name) {
         return this.iUserSystemRepository.existsByUserSystemUsername(name);
     }
 
@@ -66,20 +63,31 @@ public class UserSystemService implements IFirstService<UserSystemDto> {
         return this.iUserSystemRepository.existsByUserSystemEmail(email);
     }
 
-    @Transactional(rollbackFor = NotAddSqlException.class)
     @Override
-    public void add(UserSystemDto dto) {
-        this.iUserSystemRepository.save(IUserSystemMapper.INSTANCE.dtoToEntity(dto));
+    public void add(UserSystemVo dto) {
+        this.iUserSystemRepository.save(this.mapUser(dto));
     }
 
-    @Transactional(rollbackFor = SQLException.class)
     @Override
-    public void update(UserSystemDto dto) {
-        this.iUserSystemRepository.save(IUserSystemMapper.INSTANCE.dtoToEntity(dto));
+    public void update(UserSystemVo dto) {
+        this.iUserSystemRepository.save(this.mapUser(dto));
     }
 
     @Override
     public void delete(int id) {
         this.iUserSystemRepository.deleteById(id);
+    }
+
+    private UserSystemEntity mapUser(UserSystemVo vo) {
+        var roles = new HashSet<UserRoleEntity>();
+        if (vo.getRoleName().contains("admin")) {
+            var role = this.iUserRoleRepository.findByUserRoleName(RolNameEnum.ROLE_ADMIN).orElseThrow();
+            roles.add(role);
+        }
+        var role = this.iUserRoleRepository.findByUserRoleName(RolNameEnum.ROLE_USER).orElseThrow();
+        roles.add(role);
+        var userClient = IUserSystemMapper.INSTANCE.toEntity(vo);
+        IUserSystemMapper.INSTANCE.updateSystemRoles(userClient, roles);
+        return userClient;
     }
 }

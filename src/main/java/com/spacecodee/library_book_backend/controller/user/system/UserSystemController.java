@@ -1,11 +1,10 @@
 package com.spacecodee.library_book_backend.controller.user.system;
 
-import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdminOrUser;
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
-import com.spacecodee.library_book_backend.core.controller.IRDController;
+import com.spacecodee.library_book_backend.exceptions.NotDeleteSqlException;
 import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
 import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
-import com.spacecodee.library_book_backend.dto.user.system.UserSystemDto;
+import com.spacecodee.library_book_backend.model.dto.user.system.UserSystemDto;
 import com.spacecodee.library_book_backend.service.user.system.UserSystemServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/user-system")
-public class UserSystemController implements IRDController<UserSystemDto, Integer> {
+public class UserSystemController implements IUserSystemController {
 
     private final UserSystemServiceImpl userSystemService;
     private final MessageUtilComponent messageUtilComponent;
@@ -27,25 +26,22 @@ public class UserSystemController implements IRDController<UserSystemDto, Intege
         this.messageUtilComponent = messageUtilComponent;
     }
 
-    @IsAuthenticatedAsAdminOrUser
     @Override
-    public ResponseEntity<HttpResponseApiMsg<List<UserSystemDto>>> list(String lang) {
-        final HttpResponseApiMsg<List<UserSystemDto>> httpResponseApiMsg = new HttpResponseApiMsg<>();
-        httpResponseApiMsg.setData(this.userSystemService.getAll());
-
-        if (httpResponseApiMsg.getData().isEmpty()) {
-            httpResponseApiMsg.setMessage(
+    public ResponseEntity<HttpResponseApiMsg<List<UserSystemDto>>> getAll(String lang) {
+        final var response = new HttpResponseApiMsg<List<UserSystemDto>>();
+        response.setData(this.userSystemService.getAll());
+        if (response.getData().isEmpty()) {
+            response.setMessage(
                     this.messageUtilComponent.getMessage("get.all.no.content.user.system", lang));
-            httpResponseApiMsg.setHttpStatus(HttpStatus.NO_CONTENT);
-            return new ResponseEntity<>(httpResponseApiMsg, HttpStatus.OK);
+            response.setHttpStatus(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
-        httpResponseApiMsg.setMessage(this.messageUtilComponent.getMessage("get.all.success.user.system", lang));
-        httpResponseApiMsg.setHttpStatus(HttpStatus.OK);
-        return new ResponseEntity<>(httpResponseApiMsg, HttpStatus.OK);
+        response.setMessage(this.messageUtilComponent.getMessage("get.all.success.user.system", lang));
+        response.setHttpStatus(HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @IsAuthenticatedAsAdminOrUser
     @Override
     public ResponseEntity<HttpResponseApiMsg<UserSystemDto>> getById(String lang, int id) {
         final HttpResponseApiMsg<UserSystemDto> httpResponseApiMsg = new HttpResponseApiMsg<>();
@@ -56,13 +52,13 @@ public class UserSystemController implements IRDController<UserSystemDto, Intege
     }
 
     @Override
-    public ResponseEntity<HttpResponseApi> delete(String lang, Integer id) {
-        HttpResponseApi httpResponseApiMsg = new HttpResponseApi();
+    public ResponseEntity<HttpResponseApi> delete(String lang, int id) throws NotDeleteSqlException {
+        final var response = new HttpResponseApi();
 
         this.userSystemService.delete(lang, id);
-        httpResponseApiMsg.setMessage(this.messageUtilComponent.getMessage("delete.success.user.system", lang));
-        httpResponseApiMsg.setHttpStatus(HttpStatus.OK);
+        response.setMessage(this.messageUtilComponent.getMessage("delete.success.user.system", lang));
+        response.setHttpStatus(HttpStatus.OK);
 
-        return new ResponseEntity<>(httpResponseApiMsg, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

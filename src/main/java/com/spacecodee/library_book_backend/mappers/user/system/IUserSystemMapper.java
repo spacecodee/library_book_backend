@@ -1,35 +1,46 @@
 package com.spacecodee.library_book_backend.mappers.user.system;
 
-import com.spacecodee.library_book_backend.dto.user.system.PUserSystemDto;
-import com.spacecodee.library_book_backend.dto.user.system.UserSystemDto;
+import com.spacecodee.library_book_backend.entity.PeopleEntity;
+import com.spacecodee.library_book_backend.entity.UserRoleEntity;
 import com.spacecodee.library_book_backend.entity.UserSystemEntity;
 import com.spacecodee.library_book_backend.mappers.people.IPeopleMapper;
-import com.spacecodee.library_book_backend.mappers.role.IUserRoleMapper;
-import org.mapstruct.*;
+import com.spacecodee.library_book_backend.model.dto.people.PeopleDto;
+import com.spacecodee.library_book_backend.model.vo.user.system.UserSystemVo;
+import org.jetbrains.annotations.NotNull;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IUserSystemMapper {
 
     IUserSystemMapper INSTANCE = Mappers.getMapper(IUserSystemMapper.class);
 
-    @Mapping(source = "id", target = "userSystemId")
-    @Mapping(source = "email", target = "userSystemEmail")
-    @Mapping(source = "username", target = "userSystemUsername")
-    @Mapping(source = "password", target = "userSystemPassword")
+    @Mapping(target = "userSystemId", source = "id")
+    @Mapping(target = "userSystemEmail", source = "email")
+    @Mapping(target = "userSystemUsername", source = "username")
+    @Mapping(target = "userSystemPassword", source = "password")
+    @Mapping(target = "peopleEntity", source = "peopleDto", qualifiedByName = "peopleEntity")
     @Mapping(target = "userRolesEntity", ignore = true)
-    @Mapping(target = "peopleEntity", ignore = true)
-    UserSystemEntity dtoToEntity(UserSystemDto dto);
+    UserSystemEntity toEntity(UserSystemVo entity);
 
+    @Named("peopleEntity")
+    default PeopleEntity mapPeopleEntity(@NotNull PeopleDto dto) {
+        return IPeopleMapper.INSTANCE.toEntity(dto);
+    }
+
+    default void updateSystemRoles(UserSystemEntity userClient, Set<UserRoleEntity> roles) {
+        userClient.setUserRolesEntity(roles);
+    }
+    /*
     @AfterMapping
     default void setPeopleEntity(@MappingTarget UserSystemEntity entity, UserSystemDto dto) {
         if (dto.getPeopleDto() != null) {
-            entity.setPeopleEntity(IPeopleMapper.INSTANCE.dtoToEntity(dto.getPeopleDto()));
+            entity.setPeopleEntity(IPeopleMapper.INSTANCE.toEntity(dto.getPeopleDto()));
         }
     }
 
@@ -43,14 +54,11 @@ public interface IUserSystemMapper {
         }
     }
 
-    @InheritInverseConfiguration(name = "dtoToEntity")
-    UserSystemDto entityToDto(UserSystemEntity entity);
-
 
     @AfterMapping
     default void setPeopleDto(@MappingTarget UserSystemDto dto, UserSystemEntity entity) {
         if (entity.getPeopleEntity() != null) {
-            dto.setPeopleDto(IPeopleMapper.INSTANCE.entityToDto(entity.getPeopleEntity()));
+            dto.setPeopleDto(IPeopleMapper.INSTANCE.toDto(entity.getPeopleEntity()));
         }
     }
 
@@ -61,13 +69,8 @@ public interface IUserSystemMapper {
                     userRoleEntity -> dto.getUserRolesDto().add(IUserRoleMapper.INSTANCE.entityToDtos(userRoleEntity)));
         }
     }
-
-
-    @InheritInverseConfiguration(name = "entityToDto")
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    UserSystemEntity updateEntityFromDto(UserSystemDto dto, @MappingTarget UserSystemEntity entity);
-
     //principal user
+
     @Mapping(target = "username", source = "userSystemUsername")
     @Mapping(target = "password", source = "userSystemPassword")
     @Mapping(target = "email", source = "userSystemEmail")
@@ -86,19 +89,15 @@ public interface IUserSystemMapper {
     @AfterMapping
     default void setAuthorities(@MappingTarget PUserSystemDto dto, UserSystemEntity entity) {
         if (!entity.getUserRolesEntity().isEmpty()) {
-            List<SimpleGrantedAuthority> authorities = entity.getUserRolesEntity()
-                                                             .stream()
-                                                             .map(rol -> new SimpleGrantedAuthority(
-                                                                     rol.getUserRoleName().name()
-                                                             )).collect(Collectors.toList());
+            List<SimpleGrantedAuthority> authorities = entity
+                    .getUserRolesEntity()
+                    .stream()
+                    .map(rol -> new SimpleGrantedAuthority(
+                            rol.getUserRoleName().name()
+                    )).collect(Collectors.toList());
             dto.setAuthorities(authorities);
         }
     }
 
-    default List<String> getUserSystemRoles(PUserSystemDto dto) {
-        return dto.getAuthorities()
-                  .stream()
-                  .map(GrantedAuthority::getAuthority)
-                  .collect(Collectors.toList());
-    }
+    */
 }

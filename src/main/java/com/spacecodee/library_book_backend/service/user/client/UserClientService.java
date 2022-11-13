@@ -1,47 +1,46 @@
 package com.spacecodee.library_book_backend.service.user.client;
 
-import com.spacecodee.library_book_backend.dto.user.client.UserClientDto;
+import com.spacecodee.library_book_backend.entity.UserClientEntity;
+import com.spacecodee.library_book_backend.enums.RolNameEnum;
 import com.spacecodee.library_book_backend.mappers.user.client.IUserClientMapper;
+import com.spacecodee.library_book_backend.mappers.user.client.IUserClientReadMapper;
+import com.spacecodee.library_book_backend.model.dto.user.client.UserClientDto;
+import com.spacecodee.library_book_backend.model.vo.user.client.UserClientVo;
 import com.spacecodee.library_book_backend.repository.IUserClientRepository;
-import com.spacecodee.library_book_backend.service.generics.IFirstService;
+import com.spacecodee.library_book_backend.repository.IUserRoleRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserClientService implements IFirstService<UserClientDto> {
+public class UserClientService implements IUserClientService {
 
     private final IUserClientRepository iUserClientRepository;
+    private final IUserRoleRepository iUserRoleRepository;
 
-    public UserClientService(IUserClientRepository iUserClientRepository) {
+    public UserClientService(IUserClientRepository iUserClientRepository, IUserRoleRepository iUserRoleRepository) {
         this.iUserClientRepository = iUserClientRepository;
+        this.iUserRoleRepository = iUserRoleRepository;
     }
 
     @Override
     public List<UserClientDto> getAll() {
-        final List<UserClientDto> list = new ArrayList<>();
-        this.iUserClientRepository.findAll().forEach(entity -> list.add(
-                IUserClientMapper.INSTANCE.entityToDto(entity)));
-
-        return list;
+        return IUserClientReadMapper.INSTANCE.mapClients(iUserClientRepository.findAll());
     }
 
     @Override
     public Optional<UserClientDto> getById(int id) {
         return this.iUserClientRepository
                 .findById(id).or(Optional::empty)
-                .map(IUserClientMapper.INSTANCE::entityToDto);
+                .map(IUserClientReadMapper.INSTANCE::toDto);
     }
 
     @Override
-    public Optional<UserClientDto> getByName(String name) {
+    public Optional<UserClientDto> getByUsername(String username) {
         return this.iUserClientRepository
-                .findByUsername(name).or(Optional::empty)
-                .map(IUserClientMapper.INSTANCE::entityToDto);
+                .findByUsername(username).or(Optional::empty)
+                .map(IUserClientReadMapper.INSTANCE::toDto);
     }
 
     @Override
@@ -50,7 +49,7 @@ public class UserClientService implements IFirstService<UserClientDto> {
     }
 
     @Override
-    public boolean existByName(String name) {
+    public boolean existByUsername(String name) {
         return this.iUserClientRepository.existsByUsername(name);
     }
 
@@ -62,20 +61,25 @@ public class UserClientService implements IFirstService<UserClientDto> {
         return this.iUserClientRepository.existsByUserEmail(email);
     }
 
-    @Transactional(rollbackFor = SQLException.class)
     @Override
-    public void add(UserClientDto dto) {
-        this.iUserClientRepository.save(IUserClientMapper.INSTANCE.dtoToEntity(dto));
+    public void add(UserClientVo dto) {
+        this.iUserClientRepository.save(this.mapClient(dto));
     }
 
-    @Transactional(rollbackFor = SQLException.class)
     @Override
-    public void update(UserClientDto dto) {
-        this.iUserClientRepository.save(IUserClientMapper.INSTANCE.dtoToEntity(dto));
+    public void update(UserClientVo dto) {
+        this.iUserClientRepository.save(this.mapClient(dto));
     }
 
     @Override
     public void delete(int id) {
         this.iUserClientRepository.deleteById(id);
+    }
+
+    private UserClientEntity mapClient(UserClientVo dto) {
+        var role = this.iUserRoleRepository.findByUserRoleName(RolNameEnum.ROLE_USER).orElseThrow();
+        var userClient = IUserClientMapper.INSTANCE.toEntity(dto);
+        IUserClientMapper.INSTANCE.updateClientRoles(userClient, role);
+        return userClient;
     }
 }

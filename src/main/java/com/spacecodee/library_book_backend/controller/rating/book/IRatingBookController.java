@@ -2,8 +2,8 @@ package com.spacecodee.library_book_backend.controller.rating.book;
 
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdmin;
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsClient;
-import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
 import com.spacecodee.library_book_backend.exceptions.NotDeleteSqlException;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
 import com.spacecodee.library_book_backend.model.vo.rating.book.RatingBookVo;
 import io.swagger.annotations.ApiImplicitParam;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@RequestMapping("default")
 public interface IRatingBookController {
 
     @ApiImplicitParam(name = "lang", value = "Language", paramType = "query", defaultValue = "en",

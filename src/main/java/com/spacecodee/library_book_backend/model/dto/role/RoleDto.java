@@ -1,4 +1,4 @@
-package com.spacecodee.library_book_backend.dto.role;
+package com.spacecodee.library_book_backend.model.dto.role;
 
 import lombok.*;
 
@@ -12,7 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class UserRoleDto implements Serializable {
+public class RoleDto implements Serializable {
     private int id;
     private String name;
 }
