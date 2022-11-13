@@ -139,5 +139,7 @@
                 </configuration>
             </plugin>
         </plugins>
+
+        <finalName>library_book_backend</finalName>
     </build>
 </project>
