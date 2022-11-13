@@ -4,12 +4,15 @@ import com.spacecodee.library_book_backend.entity.UserClientEntity;
 import com.spacecodee.library_book_backend.enums.RolNameEnum;
 import com.spacecodee.library_book_backend.mappers.user.client.IUserClientMapper;
 import com.spacecodee.library_book_backend.mappers.user.client.IUserClientReadMapper;
+import com.spacecodee.library_book_backend.model.dto.user.client.PUserClientDto;
 import com.spacecodee.library_book_backend.model.dto.user.client.UserClientDto;
 import com.spacecodee.library_book_backend.model.vo.user.client.UserClientVo;
 import com.spacecodee.library_book_backend.repository.IUserClientRepository;
 import com.spacecodee.library_book_backend.repository.IUserRoleRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,10 +40,10 @@ public class UserClientService implements IUserClientService {
     }
 
     @Override
-    public Optional<UserClientDto> getByUsername(String username) {
+    public Optional<PUserClientDto> getByUsername(String username) {
         return this.iUserClientRepository
                 .findByUsername(username).or(Optional::empty)
-                .map(IUserClientReadMapper.INSTANCE::toDto);
+                .map(IUserClientReadMapper.INSTANCE::entityToPDto);
     }
 
     @Override
@@ -61,23 +64,26 @@ public class UserClientService implements IUserClientService {
         return this.iUserClientRepository.existsByUserEmail(email);
     }
 
+    @Transactional(rollbackFor = SQLException.class)
     @Override
     public void add(UserClientVo dto) {
         this.iUserClientRepository.save(this.mapClient(dto));
     }
 
+    @Transactional(rollbackFor = SQLException.class)
     @Override
     public void update(UserClientVo dto) {
         this.iUserClientRepository.save(this.mapClient(dto));
     }
 
+    @Transactional(rollbackFor = SQLException.class)
     @Override
     public void delete(int id) {
         this.iUserClientRepository.deleteById(id);
     }
 
     private UserClientEntity mapClient(UserClientVo dto) {
-        var role = this.iUserRoleRepository.findByUserRoleName(RolNameEnum.ROLE_USER).orElseThrow();
+        var role = this.iUserRoleRepository.findByUserRoleName(RolNameEnum.ROLE_STUDENT).orElseThrow();
         var userClient = IUserClientMapper.INSTANCE.toEntity(dto);
         IUserClientMapper.INSTANCE.updateClientRoles(userClient, role);
         return userClient;

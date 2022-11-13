@@ -37,23 +37,27 @@ public interface IUserClientReadMapper {
     UserClientEntity toEntity(UserClientDto dto);
 
     @Named("peopleDto")
-    default PeopleDto setPeopleDto(@NotNull PeopleEntity entity) {
-        return IPeopleMapper.INSTANCE.toDto(entity);
+    default PeopleDto setPeopleDto(PeopleEntity entity) {
+        if (entity != null) {return IPeopleMapper.INSTANCE.toDto(entity);}
+        return new PeopleDto();
     }
 
     @Named("peopleEntity")
-    default PeopleEntity setPeopleEntity(@NotNull PeopleDto dto) {
-        return IPeopleMapper.INSTANCE.toEntity(dto);
+    default PeopleEntity setPeopleEntity(PeopleDto dto) {
+        if (dto != null) {return IPeopleMapper.INSTANCE.toEntity(dto);}
+        return new PeopleEntity();
     }
 
     @Named("roleDto")
-    default RoleDto setRoleDto(@NotNull UserRoleEntity entity) {
-        return IUserRoleMapper.INSTANCE.entityToDto(entity);
+    default RoleDto setRoleDto(UserRoleEntity entity) {
+        if (entity != null) {return IUserRoleMapper.INSTANCE.entityToDto(entity);}
+        return new RoleDto();
     }
 
     @Named("userRolEntity")
-    default UserRoleEntity setRole(@NotNull RoleDto dto) {
-        return IUserRoleMapper.INSTANCE.dtoToEntity(dto);
+    default UserRoleEntity setRole(RoleDto dto) {
+        if (dto != null) {return IUserRoleMapper.INSTANCE.dtoToEntity(dto);}
+        return new UserRoleEntity();
     }
 
     default List<UserClientDto> mapClients(@NotNull List<UserClientEntity> entities) {
@@ -68,8 +72,12 @@ public interface IUserClientReadMapper {
     PUserClientDto entityToPDto(UserClientEntity entity);
 
     @Named("fullName")
-    default String setFullName(@NotNull PeopleEntity people) {
-        return people.getPeopleName() + " " + people.getPeopleSurname();
+    default String setFullName(PeopleEntity people) {
+        if (people != null) {
+            return people.getPeopleName() + " " + people.getPeopleSurname();
+        }
+
+        return "";
     }
 
     @Named("authorities")

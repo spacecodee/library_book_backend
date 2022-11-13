@@ -1,5 +1,6 @@
 package com.spacecodee.library_book_backend.service.user.client;
 
+import com.spacecodee.library_book_backend.model.dto.user.client.PUserClientDto;
 import com.spacecodee.library_book_backend.model.dto.user.client.UserClientDto;
 import com.spacecodee.library_book_backend.model.vo.user.client.UserClientVo;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,7 @@ public interface IUserClientService {
 
     Optional<UserClientDto> getById(int id);
 
-    Optional<UserClientDto> getByUsername(String username);
+    Optional<PUserClientDto> getByUsername(String username);
 
     boolean existById(int id);
 

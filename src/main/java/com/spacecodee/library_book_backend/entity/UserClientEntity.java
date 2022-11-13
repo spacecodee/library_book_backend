@@ -33,6 +33,10 @@ public class UserClientEntity {
     @JoinColumn(name = "people_id", referencedColumnName = "people_id", nullable = false)
     private PeopleEntity peopleEntity;
 
+    public UserClientEntity(int userId) {
+        this.userId = userId;
+    }
+
     @Override public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

@@ -3,23 +3,18 @@ package com.spacecodee.library_book_backend.service.user.system;
 import com.spacecodee.library_book_backend.component.ExceptionShortComponent;
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
-import com.spacecodee.library_book_backend.mappers.user.system.IUserSystemReadMapper;
-import com.spacecodee.library_book_backend.model.dto.user.system.PUserSystemDto;
 import com.spacecodee.library_book_backend.model.dto.user.system.UserSystemDto;
 import com.spacecodee.library_book_backend.model.vo.user.system.UserSystemVo;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UserSystemServiceImpl implements UserDetailsService {
+public class UserSystemServiceImpl {
 
     private final UserSystemService userSystemService;
     private final ExceptionShortComponent exceptionShortComponent;
@@ -35,12 +30,6 @@ public class UserSystemServiceImpl implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = this.getByUsername("eng", username);
-        return PUserSystemDto.build(IUserSystemReadMapper.INSTANCE.toEntity(user));
-    }
-
     public List<UserSystemDto> getAll() {
         return this.userSystemService.getAll();
     }
@@ -50,18 +39,6 @@ public class UserSystemServiceImpl implements UserDetailsService {
                 .getById(id)
                 .orElseThrow(() -> this.exceptionShortComponent.notFound(
                         UserSystemServiceImpl.GET_BY_ID_ERROR_USER_CLIENT, lang));
-    }
-
-    public UserSystemDto getByUsername(String lang, String name) {
-        return this.userSystemService
-                .getByUsername(name)
-                .orElseThrow(() -> this.exceptionShortComponent.notFound("get.by.user.name.error.user.system", lang));
-    }
-
-    private void existById(String lang, int id) {
-        if (this.userSystemService.existById(id)) {
-            throw this.exceptionShortComponent.existFound("get.by.id.exists.user.system", lang);
-        }
     }
 
     private void noExistById(String lang, int id) {

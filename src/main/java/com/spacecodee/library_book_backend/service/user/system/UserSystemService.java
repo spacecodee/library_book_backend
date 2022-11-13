@@ -5,10 +5,12 @@ import com.spacecodee.library_book_backend.entity.UserSystemEntity;
 import com.spacecodee.library_book_backend.enums.RolNameEnum;
 import com.spacecodee.library_book_backend.mappers.user.system.IUserSystemMapper;
 import com.spacecodee.library_book_backend.mappers.user.system.IUserSystemReadMapper;
+import com.spacecodee.library_book_backend.model.dto.user.system.PUserSystemDto;
 import com.spacecodee.library_book_backend.model.dto.user.system.UserSystemDto;
 import com.spacecodee.library_book_backend.model.vo.user.system.UserSystemVo;
 import com.spacecodee.library_book_backend.repository.IUserRoleRepository;
 import com.spacecodee.library_book_backend.repository.IUserSystemRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -39,10 +41,10 @@ public class UserSystemService implements IUserSystemService {
     }
 
     @Override
-    public Optional<UserSystemDto> getByUsername(String username) {
+    public Optional<PUserSystemDto> getByUsername(String username) {
         return this.iUserSystemRepository
                 .findByUserSystemUsername(username).or(Optional::empty)
-                .map(IUserSystemReadMapper.INSTANCE::toDto);
+                .map(IUserSystemReadMapper.INSTANCE::entityToPDto);
     }
 
     @Override
@@ -78,7 +80,7 @@ public class UserSystemService implements IUserSystemService {
         this.iUserSystemRepository.deleteById(id);
     }
 
-    private UserSystemEntity mapUser(UserSystemVo vo) {
+    private UserSystemEntity mapUser(@NotNull UserSystemVo vo) {
         var roles = new HashSet<UserRoleEntity>();
         if (vo.getRoleName().contains("admin")) {
             var role = this.iUserRoleRepository.findByUserRoleName(RolNameEnum.ROLE_ADMIN).orElseThrow();

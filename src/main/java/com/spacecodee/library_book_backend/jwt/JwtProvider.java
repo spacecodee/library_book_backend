@@ -9,6 +9,7 @@ import com.spacecodee.library_book_backend.model.dto.jwt.JwtDto;
 import com.spacecodee.library_book_backend.model.dto.user.client.PUserClientDto;
 import com.spacecodee.library_book_backend.model.dto.user.system.PUserSystemDto;
 import io.jsonwebtoken.*;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +32,7 @@ public class JwtProvider {
     @Value("${jwt.expiration}")
     private int expiration;
 
-    public String generateToken(Authentication authentication) {
+    public String generateToken(@NotNull Authentication authentication) {
         String username;
         List<String> roles;
         PUserClientDto principalUser;
@@ -87,7 +88,7 @@ public class JwtProvider {
     }
 
 
-    public String refreshToken(JwtDto dto) throws ParseException {
+    public String refreshToken(@NotNull JwtDto dto) throws ParseException {
         JWT jwt = JWTParser.parse(dto.getToken());
         JWTClaimsSet claimsSet = jwt.getJWTClaimsSet();
         String username = claimsSet.getSubject();

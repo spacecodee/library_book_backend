@@ -32,24 +32,22 @@ public interface IUserClientMapper {
         return IPeopleMapper.INSTANCE.toDto(peopleEntity);
     }
 
+    @InheritInverseConfiguration(name = "toVo")
+    @Mapping(target = "peopleEntity", source = "peopleDto", qualifiedByName = "peopleEntity")
+    @Mapping(target = "userRolEntity", ignore = true)
+    UserClientEntity toEntity(UserClientVo vo);
+
     @Named("peopleEntity")
     default PeopleEntity setPeopleEntity(@NotNull PeopleDto dto) {
         return IPeopleMapper.INSTANCE.toEntity(dto);
     }
-
-    @InheritInverseConfiguration(name = "toVo")
-    @Mapping(target = "peopleEntity", source = "peopleDto", ignore = true)
-    @Mapping(target = "userRolEntity", ignore = true)
-    UserClientEntity toEntity(UserClientVo vo);
 
     default void updateClientRoles(@NotNull UserClientEntity userClient, UserRoleEntity role) {
         userClient.setUserRolEntity(role);
     }
 
     default UserClientEntity mapId(int id) {
-        final var entity = new UserClientEntity();
-        entity.setUserId(id);
-        return entity;
+        return new UserClientEntity(id);
     }
 
     default List<String> getUserClientRoles(@NotNull PUserClientDto dto) {

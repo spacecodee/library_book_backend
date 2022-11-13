@@ -1,7 +1,5 @@
 package com.spacecodee.library_book_backend.model.dto.user.system;
 
-import com.spacecodee.library_book_backend.entity.UserSystemEntity;
-import com.spacecodee.library_book_backend.mappers.user.system.IUserSystemReadMapper;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,8 +20,8 @@ public class PUserSystemDto implements Serializable, UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public static PUserSystemDto build(UserSystemEntity entity) {
-        return IUserSystemReadMapper.INSTANCE.entityToPDto(entity);
+    public static PUserSystemDto build(PUserSystemDto dto) {
+        return dto;
     }
 
     @Override

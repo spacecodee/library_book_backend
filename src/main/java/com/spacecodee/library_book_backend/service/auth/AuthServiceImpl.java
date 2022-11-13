@@ -5,6 +5,7 @@ import com.spacecodee.library_book_backend.exceptions.LoginAuthException;
 import com.spacecodee.library_book_backend.jwt.JwtProvider;
 import com.spacecodee.library_book_backend.model.dto.jwt.JwtDto;
 import com.spacecodee.library_book_backend.model.pojo.AuthUserPojo;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,7 +46,7 @@ public class AuthServiceImpl {
         }
     }
 
-    private Authentication getAuthentication(AuthUserPojo dto) {
+    private Authentication getAuthentication(@NotNull AuthUserPojo dto) {
         return this.authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         dto.getUsername(),

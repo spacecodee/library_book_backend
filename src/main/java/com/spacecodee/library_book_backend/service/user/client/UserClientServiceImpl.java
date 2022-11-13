@@ -3,23 +3,18 @@ package com.spacecodee.library_book_backend.service.user.client;
 import com.spacecodee.library_book_backend.component.ExceptionShortComponent;
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
-import com.spacecodee.library_book_backend.mappers.user.client.IUserClientReadMapper;
-import com.spacecodee.library_book_backend.model.dto.user.client.PUserClientDto;
 import com.spacecodee.library_book_backend.model.dto.user.client.UserClientDto;
 import com.spacecodee.library_book_backend.model.vo.user.client.UserClientVo;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UserClientServiceImpl implements UserDetailsService {
+public class UserClientServiceImpl {
 
     private final UserClientService userClientService;
     private final ExceptionShortComponent exceptionShortComponent;
@@ -35,12 +30,6 @@ public class UserClientServiceImpl implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = this.getByUsername(username);
-        return PUserClientDto.build(IUserClientReadMapper.INSTANCE.toEntity(user));
-    }
-
     public List<UserClientDto> getAll() {
         return this.userClientService.getAll();
     }
@@ -50,12 +39,6 @@ public class UserClientServiceImpl implements UserDetailsService {
                 .getById(id)
                 .orElseThrow(() -> this.exceptionShortComponent.notFound(
                         UserClientServiceImpl.GET_BY_ID_ERROR_USER_CLIENT, lang));
-    }
-
-    public UserClientDto getByUsername(String name) {
-        return this.userClientService
-                .getByUsername(name)
-                .orElse(new UserClientDto());
     }
 
     public void existById(String lang, int id) {

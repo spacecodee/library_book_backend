@@ -1,7 +1,9 @@
 package com.spacecodee.library_book_backend.jwt;
 
-import com.spacecodee.library_book_backend.service.user.client.UserClientServiceImpl;
-import com.spacecodee.library_book_backend.service.user.system.UserSystemServiceImpl;
+import com.spacecodee.library_book_backend.service.user.client.PrincipalClientServiceImpl;
+import com.spacecodee.library_book_backend.service.user.system.PrincipalUserServiceImpl;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +26,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Autowired
     private JwtProvider jwtProvider;
     @Autowired
-    private UserSystemServiceImpl userDetailsService;
+    private PrincipalUserServiceImpl userDetailsService;
     @Autowired
-    private UserClientServiceImpl userClientService;
+    private PrincipalClientServiceImpl userClientService;
 
     @Override
     @NonNull
@@ -40,7 +42,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
             if (token != null && this.jwtProvider.validateToken(token)) {
                 String username = this.jwtProvider.getUsernameFromToken(token);
-                userDetails = getUserSystemOrClient(username);
+                userDetails = this.getUserSystemOrClient(username);
 
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(
@@ -62,14 +64,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         UserDetails userDetails;
 
         userDetails = this.userDetailsService.loadUserByUsername(username);
-        if (userDetails.getAuthorities() == null) {
+        if (userDetails.getAuthorities().isEmpty()) {
             userDetails = this.userClientService.loadUserByUsername(username);
         }
 
         return userDetails;
     }
 
-    private String getToken(HttpServletRequest request) {
+    private @Nullable String getToken(@NotNull HttpServletRequest request) {
         String header = request.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer")) {return header.replace("Bearer ", "");}
         return null;

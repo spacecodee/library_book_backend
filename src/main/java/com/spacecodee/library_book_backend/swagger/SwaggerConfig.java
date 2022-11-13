@@ -3,6 +3,7 @@ package com.spacecodee.library_book_backend.swagger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.PathSelectors;
@@ -26,7 +27,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .securityContexts(List.of(this.securityContext()))
                 .securitySchemes(List.of(this.apiKey()))
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
                 .paths(PathSelectors.any())
                 .build();
     }

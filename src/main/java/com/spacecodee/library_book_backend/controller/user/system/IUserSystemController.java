@@ -23,7 +23,7 @@ public interface IUserSystemController {
 
     @ApiImplicitParam(name = "lang", value = "Language", paramType = "query", defaultValue = "en",
             dataTypeClass = String.class)
-    @IsAuthenticatedAsAdminOrUser
+    @IsAuthenticatedAsAdminOrUserOrClient
     @GetMapping("/get-by/{id}")
     ResponseEntity<HttpResponseApiMsg<UserSystemDto>> getById(@RequestParam(defaultValue = "en") String lang,
                                                               @PathVariable int id);

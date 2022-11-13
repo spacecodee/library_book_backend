@@ -1,5 +1,6 @@
 package com.spacecodee.library_book_backend.service.user.system;
 
+import com.spacecodee.library_book_backend.model.dto.user.system.PUserSystemDto;
 import com.spacecodee.library_book_backend.model.dto.user.system.UserSystemDto;
 import com.spacecodee.library_book_backend.model.vo.user.system.UserSystemVo;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,8 @@ public interface IUserSystemService {
 
     Optional<UserSystemDto> getById(int id);
 
-    Optional<UserSystemDto> getByUsername(String username);
+    @Transactional(readOnly = true, rollbackFor = SQLException.class)
+    Optional<PUserSystemDto> getByUsername(String username);
 
     boolean existById(int id);
 
