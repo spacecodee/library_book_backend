@@ -11,7 +11,7 @@ services:
     depends_on:
       - postgresql_bd
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql_bd:5433/spacecodee
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql_bd:5432/spacecodee
       - SPRING_DATASOURCE_USERNAME=spacecodee
       - SPRING_DATASOURCE_PASSWORD=spacecodee
     ports:
@@ -28,7 +28,7 @@ services:
       - POSTGRES_USER=spacecodee
       - POSTGRES_DB=spacecodee
     ports:
-      - "5433:5433"
+      - "5432:5432"
     volumes:
       - postgresql_bd:/var/lib/postgresql/data
 
