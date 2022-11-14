@@ -1,10 +1,20 @@
-FROM maven:3.8.6-eclipse-temurin-11 AS build
-COPY src /home/app/src
-COPY pom.xml /home/app
-#skip tests
-RUN mvn -f /home/app/pom.xml clean package -DskipTests
+# AS <NAME> to name this stage as maven
+FROM maven:3.8.6-eclipse-temurin-11 AS maven
+LABEL MAINTAINER="spacecodee@gmail.com"
 
-FROM eclipse-temurin:11-jre
-MAINTAINER spacecodee.com
-COPY COPY --from=build /home/app/target/library_book_backend.jar /usr/local/lib/library_book_backend.jar/
+WORKDIR /usr/src/app
+COPY . /usr/src/app
+# Compile and package the application to an executable JAR
+RUN mvn package -DskipTests
+
+# For Java 11,
+FROM adoptopenjdk/openjdk11:alpine-jre
+
+ARG JAR_FILE=library_book_backend.jar
+
+WORKDIR /opt/app
+
+# Copy the spring-boot-api-tutorial.jar from the maven stage to the /opt/app directory of the current stage.
+COPY --from=maven /usr/src/app/target/${JAR_FILE} /opt/app/
+
 ENTRYPOINT ["java","-jar","library_book_backend.jar"]
