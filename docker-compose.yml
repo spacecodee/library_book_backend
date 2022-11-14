@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
   postgresql_bd:
@@ -6,9 +6,9 @@ services:
     image: postgres:latest
     container_name: postgresql_bd
     environment:
-      - POSTGRES_PASSWORD=spacecodee
-      - POSTGRES_USER=spacecodee
-      - POSTGRES_DB=spacecodee
+      POSTGRES_PASSWORD: spacecodee
+      POSTGRES_USER: spacecodee
+      POSTGRES_DB: spacecodee
     ports:
       - "5432:5432"
     volumes:
@@ -23,9 +23,9 @@ services:
     depends_on:
       - postgresql_bd
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql_bd:5432/spacecodee
-      - SPRING_DATASOURCE_USERNAME=spacecodee
-      - SPRING_DATASOURCE_PASSWORD=spacecodee
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql_bd:5432/spacecodee
+      SPRING_DATASOURCE_USERNAME: spacecodee
+      SPRING_DATASOURCE_PASSWORD: spacecodee
     ports:
       - "8080:8080"
 
