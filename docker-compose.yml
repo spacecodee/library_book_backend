@@ -16,6 +16,8 @@ services:
       - SPRING_DATASOURCE_PASSWORD=spacecodee
     ports:
       - "8080:8080"
+    networks:
+      - postgresql_bd
 
   postgresql_bd:
     restart: always
@@ -28,4 +30,10 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./postgresql:/var/lib/postgresql/data
+      - postgresql_bd:/var/lib/postgresql/data
+
+volumes:
+  postgresql_bd:
+
+networks:
+  postgresql_bd:
