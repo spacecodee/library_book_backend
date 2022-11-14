@@ -3,11 +3,11 @@ version: "3"
 services:
   #spring boot settings
   springboot:
-    image: "library_book_backend:latest"
+    image: library_book_backend:latest
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: "library_book_backend"
+    container_name: library_book_backend
     depends_on:
       - postgresql_bd
     environment:
@@ -18,8 +18,9 @@ services:
       - "8080:8080"
 
   postgresql_bd:
-    image: "postgres:latest"
-    container_name: "postgresql_bd"
+    restart: always
+    image: postgres:latest
+    container_name: postgresql_bd
     environment:
       - POSTGRES_PASSWORD=spacecodee
       - POSTGRES_USER=spacecodee
