@@ -1,7 +1,19 @@
 version: "3"
 
 services:
-  #spring boot settings
+  postgresql_bd:
+    restart: always
+    image: postgres:latest
+    container_name: postgresql_bd
+    environment:
+      - POSTGRES_PASSWORD=spacecodee
+      - POSTGRES_USER=spacecodee
+      - POSTGRES_DB=spacecodee
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresql_bd:/var/lib/postgresql/data
+
   springboot:
     image: library_book_backend:latest
     build:
@@ -16,24 +28,6 @@ services:
       - SPRING_DATASOURCE_PASSWORD=spacecodee
     ports:
       - "8080:8080"
-    networks:
-      - postgresql_bd
-
-  postgresql_bd:
-    restart: always
-    image: postgres:latest
-    container_name: postgresql_bd
-    environment:
-      - POSTGRES_PASSWORD=spacecodee
-      - POSTGRES_USER=spacecodee
-      - POSTGRES_DB=spacecodee
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgresql_bd:/var/lib/postgresql/data
 
 volumes:
-  postgresql_bd:
-
-networks:
   postgresql_bd:
