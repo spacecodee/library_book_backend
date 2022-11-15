@@ -18,6 +18,7 @@ services:
 
   springboot:
     image: library_book_backend:latest
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile

@@ -5,7 +5,8 @@ WORKDIR /usr/src/app
 COPY . /usr/src/app
 # Compile and package the application to an executable JAR
 ONBUILD RUN mvn clean package
-# re run alway
+# restart the build process from this stage
+ONBUILD FROM adoptopenjdk/openjdk11:alpine-jre
 RUN mvn package -DskipTests
 
 # For Java 11,
