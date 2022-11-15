@@ -24,13 +24,13 @@ public interface ICategoryBookController {
     //dto for user into system
     @ApiImplicitParam(name = "lang", value = "Language", paramType = "query", defaultValue = "en",
             dataTypeClass = String.class)
-    @IsAuthenticatedAsAdmin
+    @IsAuthenticatedAsAdminOrUser
     @GetMapping("/get-all")
     ResponseEntity<HttpResponseApiMsg<List<CategoryBookDto>>> getAll(@RequestParam(defaultValue = "en") String lang);
 
     @ApiImplicitParam(name = "lang", value = "Language", paramType = "query", defaultValue = "en",
             dataTypeClass = String.class)
-    @IsAuthenticatedAsAdmin
+    @IsAuthenticatedAsAdminOrUser
     @GetMapping("/get-by/{id}")
     ResponseEntity<HttpResponseApiMsg<CategoryBookDto>> getByCategoryId(@RequestParam(defaultValue = "en") String lang,
                                                                         @PathVariable int id);
