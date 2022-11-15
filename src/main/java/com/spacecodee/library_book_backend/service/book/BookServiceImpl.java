@@ -52,7 +52,7 @@ public class BookServiceImpl {
 
     public ShowBookDto getByBookAndClientId(String lang, int bookId, int clientId) {
         var rating = this.ratingBookService
-                .getRatingById(IRatingBookKeyMapper.INSTANCE.toDto(bookId, clientId)).orElse(0F);
+                .getRatingById(IRatingBookKeyMapper.INSTANCE.toDto(clientId, bookId)).orElse(0F);
         var globalRating = this.ratingBookService.getPromedioByBookId(bookId).orElse(0F);
         var dto = this.bookService
                 .getByBookAndClientId(bookId)

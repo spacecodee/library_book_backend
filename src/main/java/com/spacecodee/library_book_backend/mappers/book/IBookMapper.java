@@ -25,9 +25,7 @@ public interface IBookMapper {
     BookEntity toEntity(BookVo vo);
 
     default BookEntity mapId(int id) {
-        var book = new BookEntity();
-        book.setBookId(id);
-        return book;
+        return new BookEntity(id);
     }
 
     @Named("categoryBookEntity")

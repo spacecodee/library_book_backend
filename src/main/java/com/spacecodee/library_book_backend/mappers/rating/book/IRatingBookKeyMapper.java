@@ -20,8 +20,6 @@ public interface IRatingBookKeyMapper {
     @InheritInverseConfiguration(name = "toEntity")
     RatingBookKeyVo toDto(UserRatingBookKeyEntity entity);
 
-    @Mapping(source = "bookId", target = "clientId")
-    @Mapping(source = "clientId", target = "bookId")
     default RatingBookKeyVo toDto(int clientId, int bookId) {
         return new RatingBookKeyVo(clientId, bookId);
     }

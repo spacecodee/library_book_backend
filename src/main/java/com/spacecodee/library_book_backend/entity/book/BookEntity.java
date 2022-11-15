@@ -49,6 +49,10 @@ public class BookEntity {
     @ToString.Exclude
     private Set<UserRatingBookEntity> ratingBooksEntity;
 
+    public BookEntity(int bookId) {
+        this.bookId = bookId;
+    }
+
     @Override public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

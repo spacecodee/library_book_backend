@@ -24,7 +24,7 @@ public interface IRatingBookMapper {
 
     @AfterMapping
     default void setBookAndClientId(@MappingTarget @NotNull UserRatingBookEntity entity, @NotNull RatingBookVo vo) {
-        entity.setUserRatingBookId(new UserRatingBookKeyEntity(vo.getBookId(), vo.getClientId()));
+        entity.setUserRatingBookId(new UserRatingBookKeyEntity(vo.getClientId(), vo.getBookId()));
     }
 
     @Named("bookEntity")

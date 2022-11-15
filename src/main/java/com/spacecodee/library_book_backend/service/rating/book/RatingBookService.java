@@ -5,6 +5,7 @@ import com.spacecodee.library_book_backend.mappers.rating.book.IRatingBookMapper
 import com.spacecodee.library_book_backend.model.vo.rating.book.RatingBookKeyVo;
 import com.spacecodee.library_book_backend.model.vo.rating.book.RatingBookVo;
 import com.spacecodee.library_book_backend.repository.IRatingBookRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,8 +25,7 @@ public class RatingBookService implements IRatingBookService {
     }
 
     @Override
-    public Optional<Float> getRatingById(RatingBookKeyVo dto) {
-        System.out.println(this.iRatingBookRepository.findRatingBook(dto.getBookId(), dto.getClientId()));
+    public Optional<Float> getRatingById(@NotNull RatingBookKeyVo dto) {
         return this.iRatingBookRepository.findRatingBook(dto.getBookId(), dto.getClientId()).or(() -> Optional.of(0f));
     }
 
