@@ -3,6 +3,7 @@ package com.spacecodee.library_book_backend.service.user;
 import com.spacecodee.library_book_backend.mappers.user.IGeneralUserMapper;
 import com.spacecodee.library_book_backend.model.pojo.UserAccountPojo;
 import com.spacecodee.library_book_backend.repository.IUserClientRepository;
+import com.spacecodee.library_book_backend.repository.IUserSystemRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -11,19 +12,30 @@ import java.util.Optional;
 public class UserGeneralService implements IUserGeneralService {
 
     private final IUserClientRepository userClientRepository;
-    private final IUserClientRepository userSystemRepository;
+    private final IUserSystemRepository userSystemRepository;
 
-    public UserGeneralService(IUserClientRepository userClientRepository, IUserClientRepository userSystemRepository) {
+    public UserGeneralService(IUserClientRepository userClientRepository, IUserSystemRepository userSystemRepository) {
         this.userClientRepository = userClientRepository;
         this.userSystemRepository = userSystemRepository;
     }
 
+    private Optional<UserAccountPojo> getUserSystemByUsername(String username) {
+        return this.userSystemRepository
+                .getByUserSystemUsername(username)
+                .or(Optional::empty)
+                .map(IGeneralUserMapper.INSTANCE::toSystemPojo);
+    }
+
     @Override
     public Optional<UserAccountPojo> getAccountByUsername(String username) {
-        return this.userSystemRepository
+        final var data = this.getUserSystemByUsername(username);
+        if (data.isPresent()) {
+            return data;
+        }
+
+        return this.userClientRepository
                 .getByUsername(username)
-                .or(() -> this.userClientRepository.getByUsername(username))
                 .or(Optional::empty)
-                .map(IGeneralUserMapper.INSTANCE::toToPojo);
+                .map(IGeneralUserMapper.INSTANCE::toClientPojo);
     }
 }

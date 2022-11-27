@@ -1,6 +1,7 @@
 package com.spacecodee.library_book_backend.repository;
 
 import com.spacecodee.library_book_backend.entity.user.system.UserSystemEntity;
+import com.spacecodee.library_book_backend.entity.user.system.projections.UserSystemEntityAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,5 +18,5 @@ public interface IUserSystemRepository extends JpaRepository<UserSystemEntity, I
 
     boolean existsByUserSystemEmail(String userEmail);
 
-    Optional<UserSystemEntity> getByUserSystemUsername(String userSystemUsername);
+    Optional<UserSystemEntityAccount> getByUserSystemUsername(String userSystemUsername);
 }
