@@ -4,7 +4,7 @@ LABEL MAINTAINER="spacecodee@gmail.com"
 WORKDIR /usr/src/app
 COPY . /usr/src/app
 # Compile and package the application to an executable JAR
-ONBUILD RUN mvn clean package
+ONBUILD RUN mvn clean install package
 # restart the build process
 RUN mvn package -DskipTests
 
