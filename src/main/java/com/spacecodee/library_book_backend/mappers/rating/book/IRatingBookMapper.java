@@ -1,6 +1,6 @@
 package com.spacecodee.library_book_backend.mappers.rating.book;
 
-import com.spacecodee.library_book_backend.entity.UserClientEntity;
+import com.spacecodee.library_book_backend.entity.user.client.UserClientEntity;
 import com.spacecodee.library_book_backend.entity.book.BookEntity;
 import com.spacecodee.library_book_backend.entity.rating.UserRatingBookEntity;
 import com.spacecodee.library_book_backend.entity.rating.UserRatingBookKeyEntity;

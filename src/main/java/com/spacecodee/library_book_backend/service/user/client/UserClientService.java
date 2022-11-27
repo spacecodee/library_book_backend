@@ -1,6 +1,6 @@
 package com.spacecodee.library_book_backend.service.user.client;
 
-import com.spacecodee.library_book_backend.entity.UserClientEntity;
+import com.spacecodee.library_book_backend.entity.user.client.UserClientEntity;
 import com.spacecodee.library_book_backend.enums.RolNameEnum;
 import com.spacecodee.library_book_backend.mappers.user.client.IUserClientMapper;
 import com.spacecodee.library_book_backend.mappers.user.client.IUserClientReadMapper;

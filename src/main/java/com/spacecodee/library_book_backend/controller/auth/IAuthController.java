@@ -1,14 +1,17 @@
 package com.spacecodee.library_book_backend.controller.auth;
 
+import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdminOrUserOrClient;
 import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
 import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.model.dto.jwt.JwtDto;
 import com.spacecodee.library_book_backend.model.pojo.AuthUserPojo;
+import com.spacecodee.library_book_backend.model.pojo.UserAccountPojo;
 import com.spacecodee.library_book_backend.model.vo.user.client.UserClientVo;
 import com.spacecodee.library_book_backend.model.vo.user.system.UserSystemVo;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,4 +49,11 @@ public interface IAuthController {
     @PostMapping("/refresh-token")
     ResponseEntity<HttpResponseApiMsg<JwtDto>> refresh(@RequestParam(defaultValue = "en") String lang,
                                                        @Valid @RequestBody JwtDto jwtDto);
+
+    @ApiImplicitParam(name = "lang", value = "Language", paramType = "query", defaultValue = "en",
+            dataTypeClass = String.class)
+    @GetMapping("/get-account")
+    @IsAuthenticatedAsAdminOrUserOrClient
+    ResponseEntity<HttpResponseApiMsg<UserAccountPojo>> getAccount(@RequestParam(defaultValue = "en") String lang,
+                                                                   @RequestParam() String username);
 }

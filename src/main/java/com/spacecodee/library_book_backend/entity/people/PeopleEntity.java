@@ -1,4 +1,4 @@
-package com.spacecodee.library_book_backend.entity;
+package com.spacecodee.library_book_backend.entity.people;
 
 import lombok.*;
 

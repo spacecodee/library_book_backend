@@ -1,5 +1,6 @@
 package com.spacecodee.library_book_backend.model.dto.people;
 
+import com.spacecodee.library_book_backend.entity.people.PeopleEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 /**
- * A DTO for the {@link com.spacecodee.library_book_backend.entity.PeopleEntity} entity
+ * A DTO for the {@link PeopleEntity} entity
  */
 @Getter
 @Setter

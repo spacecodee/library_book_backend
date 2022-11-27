@@ -1,11 +1,12 @@
 package com.spacecodee.library_book_backend.model.dto.people;
 
+import com.spacecodee.library_book_backend.entity.people.PeopleEntity;
 import lombok.*;
 
 import java.io.Serializable;
 
 /**
- * A DTO for the {@link com.spacecodee.library_book_backend.entity.PeopleEntity} entity
+ * A DTO for the {@link PeopleEntity} entity
  */
 @AllArgsConstructor
 @NoArgsConstructor

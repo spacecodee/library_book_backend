@@ -1,6 +1,6 @@
 package com.spacecodee.library_book_backend.mappers.people;
 
-import com.spacecodee.library_book_backend.entity.PeopleEntity;
+import com.spacecodee.library_book_backend.entity.people.PeopleEntity;
 import com.spacecodee.library_book_backend.model.dto.people.PeopleDto;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;

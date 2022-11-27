@@ -1,8 +1,8 @@
 package com.spacecodee.library_book_backend.mappers.user.system;
 
-import com.spacecodee.library_book_backend.entity.PeopleEntity;
+import com.spacecodee.library_book_backend.entity.people.PeopleEntity;
 import com.spacecodee.library_book_backend.entity.UserRoleEntity;
-import com.spacecodee.library_book_backend.entity.UserSystemEntity;
+import com.spacecodee.library_book_backend.entity.user.system.UserSystemEntity;
 import com.spacecodee.library_book_backend.mappers.people.IPeopleMapper;
 import com.spacecodee.library_book_backend.mappers.role.IUserRoleMapper;
 import com.spacecodee.library_book_backend.model.dto.people.PeopleDto;

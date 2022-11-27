@@ -1,5 +1,7 @@
-package com.spacecodee.library_book_backend.entity;
+package com.spacecodee.library_book_backend.entity.user.client;
 
+import com.spacecodee.library_book_backend.entity.people.PeopleEntity;
+import com.spacecodee.library_book_backend.entity.UserRoleEntity;
 import lombok.*;
 
 import javax.persistence.*;

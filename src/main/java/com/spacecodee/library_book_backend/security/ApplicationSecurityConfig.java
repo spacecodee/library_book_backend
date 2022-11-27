@@ -49,7 +49,10 @@ public class ApplicationSecurityConfig {
                     .disable()
                     .authorizeRequests()
                     .antMatchers(
-                            "/v1/auth/**",
+                            "/v1/auth/register-client",
+                            "/v1/auth/register-user",
+                            "/v1/auth/login",
+                            "/v1/auth/refresh-token",
                             "/v2/api-docs/**",
                             "/swagger-ui/**",
                             "/swagger-resources/**",

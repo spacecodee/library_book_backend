@@ -1,7 +1,7 @@
 package com.spacecodee.library_book_backend.service.user.system;
 
 import com.spacecodee.library_book_backend.entity.UserRoleEntity;
-import com.spacecodee.library_book_backend.entity.UserSystemEntity;
+import com.spacecodee.library_book_backend.entity.user.system.UserSystemEntity;
 import com.spacecodee.library_book_backend.enums.RolNameEnum;
 import com.spacecodee.library_book_backend.mappers.user.system.IUserSystemMapper;
 import com.spacecodee.library_book_backend.mappers.user.system.IUserSystemReadMapper;

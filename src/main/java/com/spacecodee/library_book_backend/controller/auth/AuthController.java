@@ -5,9 +5,11 @@ import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
 import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.model.dto.jwt.JwtDto;
 import com.spacecodee.library_book_backend.model.pojo.AuthUserPojo;
+import com.spacecodee.library_book_backend.model.pojo.UserAccountPojo;
 import com.spacecodee.library_book_backend.model.vo.user.client.UserClientVo;
 import com.spacecodee.library_book_backend.model.vo.user.system.UserSystemVo;
 import com.spacecodee.library_book_backend.service.auth.AuthServiceImpl;
+import com.spacecodee.library_book_backend.service.user.UserGeneralServiceImpl;
 import com.spacecodee.library_book_backend.service.user.client.UserClientServiceImpl;
 import com.spacecodee.library_book_backend.service.user.system.UserSystemServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -20,14 +22,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController implements IAuthController {
 
     private final AuthServiceImpl authService;
+    private final UserGeneralServiceImpl userGeneralService;
     private final UserClientServiceImpl userClientService;
     private final UserSystemServiceImpl userSystemService;
     private final MessageUtilComponent messageUtilComponent;
 
-    public AuthController(AuthServiceImpl authService, UserClientServiceImpl userClientService,
+    public AuthController(AuthServiceImpl authService, UserGeneralServiceImpl userGeneralService,
+                          UserClientServiceImpl userClientService,
                           UserSystemServiceImpl userSystemService,
                           MessageUtilComponent messageUtilComponent) {
         this.authService = authService;
+        this.userGeneralService = userGeneralService;
         this.userClientService = userClientService;
         this.userSystemService = userSystemService;
         this.messageUtilComponent = messageUtilComponent;
@@ -68,6 +73,15 @@ public class AuthController implements IAuthController {
         HttpResponseApiMsg<JwtDto> apiMsg = new HttpResponseApiMsg<>();
         apiMsg.setData(this.authService.refreshToken(lang, jwtDto));
         apiMsg.setMessage(this.messageUtilComponent.getMessage("refresh.token.success", lang));
+        apiMsg.setHttpStatus(HttpStatus.OK);
+        return new ResponseEntity<>(apiMsg, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<HttpResponseApiMsg<UserAccountPojo>> getAccount(String lang, String username) {
+        HttpResponseApiMsg<UserAccountPojo> apiMsg = new HttpResponseApiMsg<>();
+        apiMsg.setData(this.userGeneralService.getAccountByUsername(lang, username));
+        apiMsg.setMessage(this.messageUtilComponent.getMessage("get.by.username.account", lang));
         apiMsg.setHttpStatus(HttpStatus.OK);
         return new ResponseEntity<>(apiMsg, HttpStatus.OK);
     }
