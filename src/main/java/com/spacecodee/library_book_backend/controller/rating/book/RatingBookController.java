@@ -23,10 +23,10 @@ public class RatingBookController implements IRatingBookController {
     }
 
     @Override
-    public ResponseEntity<HttpResponseApi> add(String lang, RatingBookVo dto) {
+    public ResponseEntity<HttpResponseApi> add(String lang, int bookId, double ratingBook, String username) {
         HttpResponseApi httpResponseApiMsg = new HttpResponseApi();
 
-        this.ratingBookService.add(lang, dto);
+        this.ratingBookService.add(lang, bookId, ratingBook, username);
         httpResponseApiMsg.setMessage(this.messageUtilComponent.getMessage("add.success.rating.book", lang));
         httpResponseApiMsg.setHttpStatus(HttpStatus.OK);
         return new ResponseEntity<>(httpResponseApiMsg, HttpStatus.OK);

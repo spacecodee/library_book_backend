@@ -7,6 +7,7 @@ import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
 import com.spacecodee.library_book_backend.mappers.rating.book.IRatingBookKeyMapper;
 import com.spacecodee.library_book_backend.model.vo.rating.book.RatingBookKeyVo;
 import com.spacecodee.library_book_backend.model.vo.rating.book.RatingBookVo;
+import com.spacecodee.library_book_backend.service.user.client.UserClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -15,15 +16,16 @@ import org.springframework.stereotype.Service;
 public class RatingBookServiceImpl {
 
     private final RatingBookService ratingBookService;
-
+    private final UserClientService userClientService;
     private final ExceptionShortComponent exceptionShortComponent;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RatingBookServiceImpl.class);
     private static final String GET_BY_ID_ERROR_RATING_BOOK = "get.by.id.error.rating.book";
 
     public RatingBookServiceImpl(RatingBookService ratingBookService,
-                                 ExceptionShortComponent exceptionShortComponent) {
+                                 UserClientService userClientService, ExceptionShortComponent exceptionShortComponent) {
         this.ratingBookService = ratingBookService;
+        this.userClientService = userClientService;
         this.exceptionShortComponent = exceptionShortComponent;
     }
 
@@ -33,7 +35,9 @@ public class RatingBookServiceImpl {
         }
     }
 
-    public void add(String lang, RatingBookVo dto) {
+    public void add(String lang, int bookId, double ratingBook, String username) {
+        var clientId = this.userClientService.getUserClientIdByUsername(username);
+        final var dto = new RatingBookVo(clientId, bookId, ratingBook);
         try {
             this.ratingBookService.add(dto);
         } catch (NotAddSqlException e) {

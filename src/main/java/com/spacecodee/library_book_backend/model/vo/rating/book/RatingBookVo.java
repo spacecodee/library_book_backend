@@ -16,5 +16,5 @@ import java.io.Serializable;
 public class RatingBookVo implements Serializable {
     private int clientId;
     private int bookId;
-    private short ratingBook;
+    private double ratingBook;
 }

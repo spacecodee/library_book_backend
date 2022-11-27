@@ -17,9 +17,11 @@ public interface IRatingBookController {
     @ApiImplicitParam(name = "lang", value = "Language", paramType = "query", defaultValue = "en",
             dataTypeClass = String.class)
     @IsAuthenticatedAsClient
-    @PostMapping("/add-rating")
+    @PostMapping("/add-rating/{bookId}")
     ResponseEntity<HttpResponseApi> add(@RequestParam(defaultValue = "en") String lang,
-                                        @Valid @RequestBody RatingBookVo dto);
+                                        @PathVariable int bookId,
+                                        @RequestParam double ratingBook,
+                                        @RequestParam String username);
 
     @ApiImplicitParam(name = "lang", value = "Language", paramType = "query", defaultValue = "en",
             dataTypeClass = String.class)
