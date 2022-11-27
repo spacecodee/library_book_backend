@@ -17,6 +17,8 @@ public interface IUserClientService {
 
     Optional<PUserClientDto> getByUsername(String username);
 
+    int getUserClientIdByUsername(String username);
+
     boolean existById(int id);
 
     boolean existByUsername(String username);

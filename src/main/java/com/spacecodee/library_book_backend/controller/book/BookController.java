@@ -54,9 +54,10 @@ public class BookController implements IBookController {
     }
 
     @Override
-    public ResponseEntity<HttpResponseApiMsg<ShowBookDto>> getByBookAndClientId(String lang, int bookId, int clientId) {
+    public ResponseEntity<HttpResponseApiMsg<ShowBookDto>> getByBookAndClientId(String lang, int bookId,
+                                                                                String username) {
         final var response = new HttpResponseApiMsg<ShowBookDto>();
-        response.setData(this.bookService.getByBookAndClientId(lang, bookId, clientId));
+        response.setData(this.bookService.getByBookAndClientId(lang, bookId, username));
         response.setMessage(this.messageUtilComponent.getMessage("get.by.id.success.book", lang));
         response.setHttpStatus(HttpStatus.OK);
         return new ResponseEntity<>(response, HttpStatus.OK);

@@ -47,6 +47,11 @@ public class UserClientService implements IUserClientService {
     }
 
     @Override
+    public int getUserClientIdByUsername(String username) {
+        return this.iUserClientRepository.getUserClientIdByUsername(username).orElse(0);
+    }
+
+    @Override
     public boolean existById(int id) {
         return this.iUserClientRepository.existsById(id);
     }

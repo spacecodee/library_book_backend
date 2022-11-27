@@ -10,6 +10,7 @@ import com.spacecodee.library_book_backend.model.dto.book.ShowBookDto;
 import com.spacecodee.library_book_backend.model.vo.book.BookVo;
 import com.spacecodee.library_book_backend.service.category.book.CategoryBookServiceImpl;
 import com.spacecodee.library_book_backend.service.rating.book.RatingBookService;
+import com.spacecodee.library_book_backend.service.user.client.UserClientService;
 import com.spacecodee.library_book_backend.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -22,8 +23,8 @@ import java.util.List;
 public class BookServiceImpl {
 
     private final CategoryBookServiceImpl categoryBookService;
-
     private final RatingBookService ratingBookService;
+    private final UserClientService userClientService;
     private final BookService bookService;
     private final ExceptionShortComponent exceptionShortComponent;
 
@@ -31,10 +32,11 @@ public class BookServiceImpl {
     private static final String GET_BY_ID_ERROR_BOOK = "get.by.id.error.book";
 
     public BookServiceImpl(CategoryBookServiceImpl categoryBookService, RatingBookService ratingBookService,
-                           BookService bookService,
+                           UserClientService userClientService, BookService bookService,
                            ExceptionShortComponent exceptionShortComponent) {
         this.categoryBookService = categoryBookService;
         this.ratingBookService = ratingBookService;
+        this.userClientService = userClientService;
         this.bookService = bookService;
         this.exceptionShortComponent = exceptionShortComponent;
     }
@@ -50,7 +52,8 @@ public class BookServiceImpl {
                         BookServiceImpl.GET_BY_ID_ERROR_BOOK, lang));
     }
 
-    public ShowBookDto getByBookAndClientId(String lang, int bookId, int clientId) {
+    public ShowBookDto getByBookAndClientId(String lang, int bookId, String username) {
+        var clientId = this.userClientService.getUserClientIdByUsername(username);
         var rating = this.ratingBookService
                 .getRatingById(IRatingBookKeyMapper.INSTANCE.toDto(clientId, bookId)).orElse(0F);
         var globalRating = this.ratingBookService.getPromedioByBookId(bookId).orElse(0F);

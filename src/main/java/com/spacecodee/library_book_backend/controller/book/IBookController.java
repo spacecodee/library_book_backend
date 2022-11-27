@@ -39,7 +39,7 @@ public interface IBookController {
     @GetMapping("/find-by/{bookId}")
     ResponseEntity<HttpResponseApiMsg<ShowBookDto>> getByBookAndClientId(
             @RequestParam(defaultValue = "en") String lang,
-            @PathVariable int bookId, @RequestParam int clientId);
+            @PathVariable int bookId, @RequestParam String username);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "lang", value = "Language", paramType = "query",
