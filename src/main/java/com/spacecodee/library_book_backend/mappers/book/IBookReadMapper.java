@@ -14,7 +14,10 @@ import com.spacecodee.library_book_backend.model.dto.book.ShowBookDto;
 import com.spacecodee.library_book_backend.model.dto.category.book.CategoryBookDto;
 import com.spacecodee.library_book_backend.model.dto.rating.book.RatingPromedioBookDto;
 import org.jetbrains.annotations.NotNull;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import java.util.ArrayList;
@@ -76,6 +79,13 @@ public interface IBookReadMapper {
             @NotNull Set<BookIdNameAuthorImageRatingsEntityInfo> entity) {
         final var books = new HashSet<BookAndRatingPromedioDto>();
         entity.stream().map(this::toDto).forEach(books::add);
+        return books;
+    }
+
+
+    default List<BookAndRatingPromedioDto> getBooks(@NotNull List<BookIdNameAuthorImageRatingsEntityInfo> entities) {
+        final var books = new ArrayList<BookAndRatingPromedioDto>();
+        entities.stream().map(this::toDto).forEach(books::add);
         return books;
     }
 

@@ -2,6 +2,7 @@ package com.spacecodee.library_book_backend.service.book;
 
 import com.spacecodee.library_book_backend.core.service.core.IExistByService;
 import com.spacecodee.library_book_backend.model.dto.book.BookAndCategoryDto;
+import com.spacecodee.library_book_backend.model.dto.book.BookAndRatingPromedioDto;
 import com.spacecodee.library_book_backend.model.dto.book.ShowBookDto;
 import com.spacecodee.library_book_backend.model.vo.book.BookVo;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,9 @@ public interface IBookService extends IExistByService {
     //clients and users
     @Transactional(readOnly = true, rollbackFor = SQLException.class)
     List<BookAndCategoryDto> findAll();
+
+    @Transactional(readOnly = true, rollbackFor = SQLException.class)
+    List<BookAndRatingPromedioDto> findByBookNameLikeIgnoreCase(String name);
 
     Optional<BookAndCategoryDto> getById(int id);
 

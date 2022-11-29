@@ -6,6 +6,7 @@ import com.spacecodee.library_book_backend.exceptions.NotDeleteSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
 import com.spacecodee.library_book_backend.mappers.rating.book.IRatingBookKeyMapper;
 import com.spacecodee.library_book_backend.model.dto.book.BookAndCategoryDto;
+import com.spacecodee.library_book_backend.model.dto.book.BookAndRatingPromedioDto;
 import com.spacecodee.library_book_backend.model.dto.book.ShowBookDto;
 import com.spacecodee.library_book_backend.model.vo.book.BookVo;
 import com.spacecodee.library_book_backend.service.category.book.CategoryBookServiceImpl;
@@ -43,6 +44,10 @@ public class BookServiceImpl {
 
     public List<BookAndCategoryDto> findAll() {
         return this.bookService.findAll();
+    }
+
+    public List<BookAndRatingPromedioDto> findByBookNameLikeIgnoreCase(String name) {
+        return this.bookService.findByBookNameLikeIgnoreCase(name);
     }
 
     public BookAndCategoryDto getById(String lang, int id) {

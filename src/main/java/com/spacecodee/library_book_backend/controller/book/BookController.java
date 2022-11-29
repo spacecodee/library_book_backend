@@ -1,13 +1,14 @@
 package com.spacecodee.library_book_backend.controller.book;
 
 import com.spacecodee.library_book_backend.component.MessageUtilComponent;
-import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
-import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotDeleteSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
 import com.spacecodee.library_book_backend.model.dto.book.BookAndCategoryDto;
+import com.spacecodee.library_book_backend.model.dto.book.BookAndRatingPromedioDto;
 import com.spacecodee.library_book_backend.model.dto.book.ShowBookDto;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
+import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
 import com.spacecodee.library_book_backend.model.vo.book.BookVo;
 import com.spacecodee.library_book_backend.service.book.BookServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,20 @@ public class BookController implements IBookController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response.setMessage(this.messageUtilComponent.getMessage("get.all.success.book", lang));
+        response.setHttpStatus(HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<HttpResponseApiMsg<List<BookAndRatingPromedioDto>>> findByNameLike(String lang, String name) {
+        final var response = new HttpResponseApiMsg<List<BookAndRatingPromedioDto>>();
+        response.setData(this.bookService.findByBookNameLikeIgnoreCase(name));
+        if (response.getData().isEmpty()) {
+            response.setMessage(this.messageUtilComponent.getMessage("get.by.name.no.content.book", lang));
+            response.setHttpStatus(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        response.setMessage(this.messageUtilComponent.getMessage("get.by.name.success.book", lang));
         response.setHttpStatus(HttpStatus.OK);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

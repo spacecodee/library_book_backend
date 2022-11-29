@@ -2,10 +2,12 @@ package com.spacecodee.library_book_backend.controller.book;
 
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdmin;
 import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdminOrUser;
+import com.spacecodee.library_book_backend.annotations.IsAuthenticatedAsAdminOrUserOrClient;
 import com.spacecodee.library_book_backend.exceptions.NotAddSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotDeleteSqlException;
 import com.spacecodee.library_book_backend.exceptions.NotUpdateSqlException;
 import com.spacecodee.library_book_backend.model.dto.book.BookAndCategoryDto;
+import com.spacecodee.library_book_backend.model.dto.book.BookAndRatingPromedioDto;
 import com.spacecodee.library_book_backend.model.dto.book.ShowBookDto;
 import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApi;
 import com.spacecodee.library_book_backend.model.dto.http.HttpResponseApiMsg;
@@ -27,6 +29,13 @@ public interface IBookController {
     @GetMapping("/get-all")
     ResponseEntity<HttpResponseApiMsg<List<BookAndCategoryDto>>> findAll(
             @RequestParam(defaultValue = "en") String lang);
+
+    @ApiImplicitParam(name = "lang", value = "Language", paramType = "query", defaultValue = "en",
+            dataTypeClass = String.class)
+    @GetMapping("/search-by/{name}")
+    @IsAuthenticatedAsAdminOrUserOrClient
+    ResponseEntity<HttpResponseApiMsg<List<BookAndRatingPromedioDto>>> findByNameLike(
+            @RequestParam(defaultValue = "en") String lang, @PathVariable String name);
 
     @ApiImplicitParam(name = "lang", value = "Language", paramType = "query", defaultValue = "en",
             dataTypeClass = String.class)
