@@ -59,6 +59,7 @@ public class BookServiceImpl {
 
     public ShowBookDto getByBookAndClientId(String lang, int bookId, String username) {
         var clientId = this.userClientService.getUserClientIdByUsername(username);
+        System.out.println(clientId);
         var rating = this.ratingBookService
                 .getRatingById(IRatingBookKeyMapper.INSTANCE.toDto(clientId, bookId)).orElse(0F);
         var globalRating = this.ratingBookService.getPromedioByBookId(bookId).orElse(0F);

@@ -14,7 +14,7 @@ public interface IRatingBookRepository extends JpaRepository<UserRatingBookEntit
     @Query("SELECT AVG(r.ratingBook) FROM UserRatingBookEntity r WHERE r.userRatingBookId.ratingBookId = ?1")
     Optional<Float> getPromedioRatingBook(int bookId);
 
-    @Query("select u.ratingBook from UserRatingBookEntity u where u.userRatingBookId.ratingBookId = ?1 OR " +
+    @Query("select u.ratingBook from UserRatingBookEntity u where u.userRatingBookId.ratingBookId = ?1 AND " +
             "u.userRatingBookId.ratingUserId = ?2")
     Optional<Float> findRatingBook(int bookId, int clientId);
 }
