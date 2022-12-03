@@ -72,7 +72,10 @@ public class UserClientServiceImpl {
     }
 
     public void add(String lang, @NotNull UserClientVo dto) {
-        this.existByPhone(lang, dto.getPeopleDto().getPhone());
+        if (dto.getPeopleDto().getPhone() != 0) {
+            this.existByPhone(lang, dto.getPeopleDto().getPhone());
+        }
+
         this.existByEmail(lang, dto.getEmail());
         this.existByUsername(lang, dto.getUsername());
         try {
